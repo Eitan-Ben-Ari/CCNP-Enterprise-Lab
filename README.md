@@ -1,17 +1,30 @@
-Feel free to contribute your networking, automation, or cybersecurity projects and scripts by pushing a new branch to the GitHub repository.
-✅Your Name needs to be included in the remote branch name for acceptance 🤠 
-✅explain your project using a powerpoint slide or text file.
-❌Dont try to push to the master branch, it won't work :)
+# CCNP Enterprise – Multi-Site DMVPN Branch Edge  
+**100% Ansible-Automated Overlay + Conditional Internet Breakout**
 
-instead create a local branch:
-checkout -b yourname_feature
+Production-grade, zero-touch branch lab – exactly how enterprises do it in 2025  
+9 × CSR1000v (IOS-XE 17.3) | GNS3/EVE-NG | Dual-VRF | No PBR anywhere
 
-after the project files are ready:
-git add -A #adds all new and changed               files to the snapshot 
-git commit -m "Network monitoring project"    #commit your files
+![Lab Topology](images/topology.png)
 
-git push origin yourname_feature #creates a remote branch by the name of your local branch.
+## Real-World Design Highlights
+- Dual-VRF architecture (`site_1` / `site_1_2` overlay + `underlay`)
+- DMVPN Phase 3 + multipoint GRE over Internet
+- Full IPsec IKEv2 protection with per-spoke pre-shared keys (Jinja2 templated)
+- BGP overlay (eBGP multihop over loopbacks) – spokes receive **default-route only from ISP**, not from hub
+- Conditional Internet breakout without a single PBR statement  
+  → Specific routes exist → traffic goes via DMVPN tunnel  
+  → No specific route → single-line default-route leak → NAT → direct ISP breakout
 
+Everything in the overlay is deployed by Ansible – zero manual CLI:
 
- 
+| Component                     | Deployed by Ansible Role/Playbook               | Templated |
+|-------------------------------|--------------------------------------------------|-----------|
+| L3 interfaces & VRFs          | `roles/l3_interfaces`                            | Yes       |
+| DMVPN mGRE tunnels            | `roles/crypto` → `dmvpn_mgre.j2`                 | Yes       |
+| Full IPsec IKEv2 suite (proposal/policy/keyring/profile/transform-set) | `roles/crypto` → `ipsec.j2` | Yes       |
+| Tunnel protection             | `roles/crypto`                                   | Yes       |
+| OSPF (underlay + overlay)     | `roles/ospf_role`                                | Yes       |
+| BGP overlay peers             | `roles/bgp` → `neighbor.j2`                      | Yes       |
+| VRF-aware NAT + default-route leak | `playbooks/main.yml`                        | Yes       |
+| Post-deployment config backup | `playbooks/small_tasks/wr+save_backup.yml`       | –         |
 
