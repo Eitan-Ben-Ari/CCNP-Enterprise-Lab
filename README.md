@@ -9,7 +9,7 @@
 - Dual-VRF architecture (`site_1` / `site_1_2` overlay + `underlay`)
 - DMVPN Phase 3 + multipoint GRE over Internet
 - Full IPsec IKEv2 protection with per-spoke pre-shared keys (Jinja2 templated)
-- BGP overlay (eBGP multihop over loopbacks) – spokes receive **default-route only from ISP**, not from hub
+- BGP overlay (eBGP multihop over loopbacks) 
 - Conditional Internet breakout without a single PBR statement  
   → Specific routes exist → traffic goes via DMVPN tunnel  
   → No specific route → single-line default-route leak → NAT → direct ISP breakout
