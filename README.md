@@ -1,8 +1,7 @@
 # CCNP Enterprise – Multi-Site DMVPN Branch Edge  
 **100% Ansible-Automated Overlay + Conditional Internet Breakout**
 
-Production-grade, zero-touch branch lab – exactly how enterprises do it in 2025  
-9 × CSR1000v (IOS-XE 17.3) | GNS3/EVE-NG | Dual-VRF | No PBR anywhere
+9 × CSR1000v (IOS-XE 17.3) | GNS3 | Dual-VRF 
 
 ![Lab Topology](images/topology.png)
 
