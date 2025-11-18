@@ -1,0 +1,153 @@
+Building configuration...
+
+Current configuration : 2112 bytes
+!
+! Last configuration change at 08:11:07 UTC Tue Nov 5 2024
+!
+version 15.2
+service timestamps debug datetime msec
+service timestamps log datetime msec
+no service password-encryption
+service compress-config
+!
+hostname SERVICE_PROVIDER
+!
+boot-start-marker
+boot-end-marker
+!
+!
+enable secret 5 $1$XAvG$FUz0cFAVDKv2B/cvHf5RF.
+!
+username eitan privilege 15 secret 5 $1$3blY$Uiz0vlZZWVn/kGJpQ.MDi.
+no aaa new-model
+!
+!
+!
+!
+!
+!
+!
+!
+ip domain-name eitan.lab
+ip cef
+no ipv6 cef
+!
+!
+!
+spanning-tree mode pvst
+spanning-tree extend system-id
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+interface Ethernet0/0
+!
+interface Ethernet0/1
+!
+interface Ethernet0/2
+!
+interface Ethernet0/3
+ description link to R2
+ no switchport
+ ip address 192.168.2.0 255.255.255.254
+ duplex full
+!
+interface Ethernet1/0
+ description link to R1
+ no switchport
+ ip address 192.168.2.4 255.255.255.254
+ duplex full
+!
+interface Ethernet1/1
+!
+interface Ethernet1/2
+ description link to R4
+ no switchport
+ ip address 192.168.2.2 255.255.255.254
+ duplex full
+!
+interface Ethernet1/3
+ description link to R3
+ no switchport
+ ip address 192.168.2.8 255.255.255.254
+ duplex full
+!
+interface Serial2/0
+ no ip address
+ shutdown
+ no fair-queue
+ serial restart-delay 0
+!
+interface Serial2/1
+ no ip address
+ shutdown
+ serial restart-delay 0
+!
+interface Serial2/2
+ no ip address
+ shutdown
+ serial restart-delay 0
+!
+interface Serial2/3
+ no ip address
+ shutdown
+ serial restart-delay 0
+!
+interface Serial3/0
+ no ip address
+ shutdown
+ serial restart-delay 0
+!
+interface Serial3/1
+ no ip address
+ shutdown
+ serial restart-delay 0
+!
+interface Serial3/2
+ no ip address
+ shutdown
+ serial restart-delay 0
+!
+interface Serial3/3
+ no ip address
+ shutdown
+ serial restart-delay 0
+!
+ip forward-protocol nd
+!
+ip http server
+!
+ip route 192.168.1.0 255.255.255.128 192.168.1.3
+ip route 192.168.1.0 255.255.255.128 192.168.2.1 12
+ip ssh server algorithm encryption aes128-ctr aes192-ctr aes256-ctr
+ip ssh client algorithm encryption aes128-ctr aes192-ctr aes256-ctr
+!
+!
+!
+!
+!
+control-plane
+!
+!
+line con 0
+ logging synchronous
+line aux 0
+line vty 0 4
+ login local
+ transport input ssh
+!
+!
+!
+end
+

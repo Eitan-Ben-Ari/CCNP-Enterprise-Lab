@@ -1,0 +1,66 @@
+- name: Configure syslog server on local machine
+  hosts: localhost
+  connection: local
+  become: yes
+
+  tasks:
+    - name: Ensure rsyslog is installed
+      apt:
+        name: rsyslog
+        state: present
+        update_cache: yes
+
+    - name: Configure rsyslog to receive remote logs
+      lineinfile:
+        path: /etc/rsyslog.conf
+        line: "{{ item }}"
+        insertafter: "^#\\$ModLoad imudp"
+      loop:
+        - '$ModLoad imudp'
+        - '$UDPServerRun 514'
+        - '$ModLoad imtcp'
+        - '$InputTCPServerRun 514'
+      notify: restart rsyslog
+
+    - name: Configure remote log storage
+      blockinfile:
+        path: /etc/rsyslog.conf
+        block: |
+          $template RemoteLogs,"/var/log/remote_logs/%FROMHOST-IP%/syslog.log"
+          *.* ?RemoteLogs
+          & stop
+        insertafter: EOF
+      notify: restart rsyslog
+
+    - name: Create directory for remote logs
+      file:
+        path: /var/log/remote_logs
+        state: directory
+        owner: syslog
+        group: adm
+        mode: '0755'
+
+    - name: Ensure rsyslog service is enabled and running
+      service:
+        name: rsyslog
+        state: started
+        enabled: yes
+
+    - name: Open firewall for syslog (UDP/TCP)
+      ufw:
+        rule: allow
+        port: "514"
+        proto: "{{ item }}"
+      loop:
+        - udp
+        - tcp
+      notify: reload firewall
+
+  handlers:
+    - name: restart rsyslog
+      service:
+        name: rsyslog
+        state: restarted
+
+    - name: reload firewall
+      command: ufw reload

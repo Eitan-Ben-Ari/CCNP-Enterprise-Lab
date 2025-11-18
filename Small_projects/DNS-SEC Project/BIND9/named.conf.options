@@ -1,0 +1,19 @@
+acl trustedclients {
+    localhost;                 // Allow localhost (127.0.0.1)
+    localnets;                 // Allow all local networks
+    192.168.255.0/24;          // Explicitly allow this subnet
+};
+
+options {
+    directory "/var/cache/bind";    // Default working directory for BIND
+    dnssec-validation auto;        // Enable automatic DNSSEC validation
+    forwarders {
+        1.1.1.1;                   // Cloudflare DNS
+        1.0.0.1;                   // Cloudflare secondary DNS
+    };
+
+    allow-recursion { trustedclients; };  // Allow recursion for trusted clients
+
+    listen-on port 53 { 192.168.255.56; 127.0.0.1; };  // Bind to specific IPv4 address
+    listen-on-v6 port 53 { ::1; };          // Bind to localhost for IPv6
+};

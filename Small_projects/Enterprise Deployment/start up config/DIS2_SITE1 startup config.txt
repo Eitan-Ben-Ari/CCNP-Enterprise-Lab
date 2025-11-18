@@ -1,0 +1,412 @@
+Building configuration...
+
+Current configuration : 8392 bytes
+!
+! Last configuration change at 07:35:14 UTC Sun Nov 10 2024
+!
+version 15.2
+service timestamps debug datetime msec
+service timestamps log datetime msec
+no service password-encryption
+service compress-config
+!
+hostname DIS2-SITE1
+!
+boot-start-marker
+boot-end-marker
+!
+!
+enable secret 5 $1$36j5$gxHy0NcWIxoa1rp2mqiYD1
+!
+username eitan privilege 15 secret 5 $1$cDJT$H2ejucW7Hf7J0zHoHqTvF0
+no aaa new-model
+!
+!
+!
+!
+!
+no ip routing
+ip arp inspection vlan 12,14,100,143
+!
+!
+!
+ip dhcp snooping vlan 1-300
+no ip dhcp snooping information option
+ip dhcp snooping
+no ip domain-lookup
+ip domain-name eitan.lab
+no ip cef
+no ipv6 cef
+!
+!
+!
+spanning-tree mode rapid-pvst
+spanning-tree extend system-id
+spanning-tree vlan 12,143 priority 24576
+spanning-tree vlan 14,100 priority 28672
+!
+!
+! 
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+interface Port-channel2
+ description link to ACC1_SITE1
+ switchport trunk allowed vlan 14,100,143
+ switchport trunk encapsulation dot1q
+ switchport trunk native vlan 14
+ switchport mode trunk
+ ip arp inspection trust
+ ip dhcp snooping limit rate 5
+!
+interface Port-channel4
+ description link to ACC2_SITE1
+ switchport trunk allowed vlan 14,100,143
+ switchport trunk encapsulation dot1q
+ switchport trunk native vlan 14
+ switchport mode trunk
+ ip arp inspection trust
+ ip dhcp snooping limit rate 5
+!
+interface Port-channel5
+ description link to DIS1_SITE1
+ switchport trunk allowed vlan 14,100,143
+ switchport trunk encapsulation dot1q
+ switchport trunk native vlan 14
+ switchport mode trunk
+ ip arp inspection trust
+ ip dhcp snooping trust
+!
+interface Ethernet0/0
+ description bundled link to DIS1_SITE1
+ switchport trunk allowed vlan 14,100,143
+ switchport trunk encapsulation dot1q
+ switchport trunk native vlan 14
+ switchport mode trunk
+ ip arp inspection trust
+ channel-group 5 mode active
+ ip dhcp snooping trust
+!
+interface Ethernet0/1
+ description bundled link to DIS1_SITE1
+ switchport trunk allowed vlan 14,100,143
+ switchport trunk encapsulation dot1q
+ switchport trunk native vlan 14
+ switchport mode trunk
+ ip arp inspection trust
+ channel-group 5 mode active
+ ip dhcp snooping trust
+!
+interface Ethernet0/2
+ description bundled link to DIS1_SITE1
+ switchport trunk allowed vlan 14,100,143
+ switchport trunk encapsulation dot1q
+ switchport trunk native vlan 14
+ switchport mode trunk
+ ip arp inspection trust
+ channel-group 5 mode active
+ ip dhcp snooping trust
+!
+interface Ethernet0/3
+ description bundled link to ACC2_SITE1
+ switchport trunk allowed vlan 14,100,143
+ switchport trunk encapsulation dot1q
+ switchport trunk native vlan 14
+ switchport mode trunk
+ ip arp inspection trust
+ channel-group 4 mode passive
+!
+interface Ethernet1/0
+ description bundled link to ACC2_SITE1
+ switchport trunk allowed vlan 14,100,143
+ switchport trunk encapsulation dot1q
+ switchport trunk native vlan 14
+ switchport mode trunk
+ ip arp inspection trust
+ channel-group 4 mode passive
+!
+interface Ethernet1/1
+ description bundled link to ACC2_SITE1
+ switchport trunk allowed vlan 14,100,143
+ switchport trunk encapsulation dot1q
+ switchport trunk native vlan 14
+ switchport mode trunk
+ ip arp inspection trust
+ channel-group 4 mode passive
+!
+interface Ethernet1/2
+ switchport access vlan 100
+ switchport mode access
+!
+interface Ethernet1/3
+ switchport access vlan 12
+ switchport mode access
+ shutdown
+!
+interface Ethernet2/0
+ switchport trunk allowed vlan 14,100,143
+ switchport trunk encapsulation dot1q
+ switchport trunk native vlan 14
+ switchport mode trunk
+ ip arp inspection trust
+ duplex full
+ ip dhcp snooping trust
+!
+interface Ethernet2/1
+ switchport access vlan 12
+ switchport mode access
+ shutdown
+!
+interface Ethernet2/2
+ switchport access vlan 12
+ switchport mode access
+ shutdown
+!
+interface Ethernet2/3
+ switchport access vlan 12
+ switchport mode access
+ shutdown
+!
+interface Ethernet3/0
+ switchport access vlan 12
+ switchport mode access
+ shutdown
+!
+interface Ethernet3/1
+ switchport access vlan 12
+ switchport mode access
+ shutdown
+!
+interface Ethernet3/2
+ switchport access vlan 12
+ switchport mode access
+ shutdown
+!
+interface Ethernet3/3
+ switchport access vlan 12
+ switchport mode access
+ shutdown
+!
+interface Ethernet4/0
+ switchport access vlan 12
+ switchport mode access
+ shutdown
+!
+interface Ethernet4/1
+ switchport access vlan 12
+ switchport mode access
+ shutdown
+!
+interface Ethernet4/2
+ switchport access vlan 12
+ switchport mode access
+ shutdown
+!
+interface Ethernet4/3
+ switchport access vlan 12
+ switchport mode access
+ shutdown
+!
+interface Ethernet5/0
+ switchport access vlan 12
+ switchport mode access
+ shutdown
+!
+interface Ethernet5/1
+ switchport access vlan 12
+ switchport mode access
+ shutdown
+!
+interface Ethernet5/2
+ switchport access vlan 12
+ switchport mode access
+ shutdown
+!
+interface Ethernet5/3
+ switchport access vlan 12
+ switchport mode access
+ shutdown
+!
+interface Ethernet6/0
+ switchport access vlan 12
+ switchport mode access
+ shutdown
+!
+interface Ethernet6/1
+ switchport access vlan 12
+ switchport mode access
+ shutdown
+!
+interface Ethernet6/2
+ switchport access vlan 12
+ switchport mode access
+ shutdown
+!
+interface Ethernet6/3
+ switchport access vlan 12
+ switchport mode access
+ shutdown
+!
+interface Ethernet7/0
+ description bundled link to ACC1_SITE1
+ switchport trunk allowed vlan 14,100,143
+ switchport trunk encapsulation dot1q
+ switchport trunk native vlan 14
+ switchport mode trunk
+ ip arp inspection trust
+ channel-group 2 mode passive
+!
+interface Ethernet7/1
+ description bundled link to ACC1_SITE1
+ switchport trunk allowed vlan 14,100,143
+ switchport trunk encapsulation dot1q
+ switchport trunk native vlan 14
+ switchport mode trunk
+ ip arp inspection trust
+ channel-group 2 mode passive
+!
+interface Ethernet7/2
+ description bundled link to ACC1_SITE1
+ switchport trunk allowed vlan 14,100,143
+ switchport trunk encapsulation dot1q
+ switchport trunk native vlan 14
+ switchport mode trunk
+ ip arp inspection trust
+ channel-group 2 mode passive
+!
+interface Ethernet7/3
+ switchport access vlan 12
+ switchport mode access
+ shutdown
+!
+interface Ethernet8/0
+ switchport access vlan 12
+ switchport mode access
+ shutdown
+!
+interface Ethernet8/1
+ switchport access vlan 12
+ switchport mode access
+ shutdown
+!
+interface Ethernet8/2
+ switchport access vlan 12
+ switchport mode access
+ shutdown
+!
+interface Ethernet8/3
+ switchport access vlan 12
+ switchport mode access
+ shutdown
+!
+interface Ethernet9/0
+ switchport access vlan 12
+ switchport mode access
+ shutdown
+!
+interface Ethernet9/1
+ switchport access vlan 12
+ switchport mode access
+ shutdown
+!
+interface Ethernet9/2
+ switchport access vlan 12
+ switchport mode access
+ shutdown
+!
+interface Ethernet9/3
+ switchport access vlan 12
+ switchport mode access
+ shutdown
+!
+interface Ethernet10/0
+ switchport access vlan 12
+ switchport mode access
+ shutdown
+!
+interface Ethernet10/1
+ switchport access vlan 12
+ switchport mode access
+ shutdown
+!
+interface Ethernet10/2
+ switchport access vlan 12
+ switchport mode access
+ shutdown
+!
+interface Ethernet10/3
+ switchport access vlan 12
+ switchport mode access
+ shutdown
+!
+interface Ethernet11/0
+ switchport access vlan 12
+ switchport mode access
+ shutdown
+!
+interface Ethernet11/1
+ switchport access vlan 12
+ switchport mode access
+ shutdown
+!
+interface Ethernet11/2
+ switchport access vlan 12
+ switchport mode access
+ shutdown
+!
+interface Ethernet11/3
+ switchport access vlan 12
+ switchport mode access
+ shutdown
+!
+interface Vlan100
+ description int vlan for IT department
+ ip address 192.168.1.7 255.255.255.128
+ no ip route-cache
+!
+ip default-gateway 192.168.1.3
+ip forward-protocol nd
+!
+ip http server
+!
+ip ssh version 2
+ip ssh server algorithm encryption aes128-ctr aes192-ctr aes256-ctr
+ip ssh client algorithm encryption aes128-ctr aes192-ctr aes256-ctr
+!
+!
+access-list 10 permit 192.168.1.0 0.0.0.255
+access-list 10 permit 192.168.2.128 0.0.0.127
+access-list 10 remark acl for vty lines
+!
+!
+!
+control-plane
+!
+banner login ^C
+**************************************************************************
+*                     Unauthorized Access Prohibited                      *
+*               Access restricted to authorized personnel only            *
+*             Any unauthorized access will be prosecuted by law           *
+**************************************************************************
+^C
+!
+line con 0
+ logging synchronous
+ login local
+line aux 0
+line vty 0 4
+ access-class 10 in
+ login local
+ transport input ssh
+!
+!
+!

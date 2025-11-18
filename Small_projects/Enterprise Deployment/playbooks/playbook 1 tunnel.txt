@@ -1,0 +1,34 @@
+---
+    - name: router_config
+      hosts: ROUTER1_SITE1
+      gather_facts: false
+      connection: local
+      vars:
+        tunnel0_address: "10.0.0.0" 
+      tasks:
+        - name: Configure Tunnel Interface on R1
+          ios_config:
+            lines:
+              - interface tunnel 0
+              - no shutdown
+              - ip address {{ tunnel0_address }} 255.255.255.254
+              - ip mtu 1400
+              - tunnel source ethernet0/3
+              - tunnel destination 192.168.2.3
+
+    - name: router_config
+      hosts: ROUTER2_SITE1
+      gather_facts: false
+      connection: local
+      vars:
+        tunnel0_address: "10.0.0.4" 
+      tasks:
+        - name: Configure Tunnel Interface on R2
+          ios_config:
+            lines:
+              - interface tunnel 0
+              - no shutdown
+              - ip mtu 1400
+              - ip address {{ tunnel0_address }} 255.255.255.254  
+              - tunnel source ethernet0/2
+              - tunnel destination 192.168.2.3

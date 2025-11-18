@@ -1,0 +1,11 @@
+
+
+ROUTER(config)#username Eitan privilage 15 secret ...
+ROUTER(config)#crypto key generate rsa modulus 2048
+ROUTER(config)#ip name-server 192.168.68.223
+ROUTER#ping Switch.Eitan.itlab.com
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 192.168.68.224, timeout is 2 seconds:
+.!!!!
+Success rate is 80 percent (4/5), round-trip min/avg/max = 4/4/5 ms
+

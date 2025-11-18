@@ -1,0 +1,84 @@
+Messi#show ip route
+Codes: L - local, C - connected, S - static, R - RIP, M - mobile, B - BGP
+       D - EIGRP, EX - EIGRP external, O - OSPF, IA - OSPF inter area
+       N1 - OSPF NSSA external type 1, N2 - OSPF NSSA external type 2
+       E1 - OSPF external type 1, E2 - OSPF external type 2
+       i - IS-IS, su - IS-IS summary, L1 - IS-IS level-1, L2 - IS-IS level-2
+       ia - IS-IS inter area, * - candidate default, U - per-user static route
+       o - ODR, P - periodic downloaded static route, H - NHRP, l - LISP
+       a - application route
+       + - replicated route, % - next hop override
+
+Gateway of last resort is not set
+
+      3.0.0.0/24 is subnetted, 1 subnets
+D EX     3.3.3.0 [170/5937502] via 10.0.2.2, 00:00:17, Ethernet0/1
+      10.0.0.0/8 is variably subnetted, 5 subnets, 2 masks
+C        10.0.0.0/24 is directly connected, Ethernet0/0
+L        10.0.0.2/32 is directly connected, Ethernet0/0
+D        10.0.1.0/24 [90/1536000] via 10.0.2.2, 00:42:56, Ethernet0/1
+                     [90/1536000] via 10.0.0.1, 00:42:56, Ethernet0/0
+C        10.0.2.0/24 is directly connected, Ethernet0/1
+L        10.0.2.1/32 is directly connected, Ethernet0/1
+D EX  192.168.12.0/24 [170/1177600] via 10.0.2.2, 00:00:17, Ethernet0/1
+D EX  192.168.14.0/24 [170/2816000] via 10.0.2.2, 00:00:17, Ethernet0/1
+D EX  192.168.23.0/24 [170/1331200] via 10.0.2.2, 00:00:17, Ethernet0/1
+D EX  192.168.25.0/24 [170/1331200] via 10.0.2.2, 00:00:17, Ethernet0/1
+D EX  192.168.45.0/24 [170/5625182] via 10.0.2.2, 00:00:17, Ethernet0/1
+
+
+Ronaldo#show ip eigrp 2 topology
+EIGRP-IPv4 VR(SEC_AS) Topology Table for AS(2)/ID(10.0.1.1)
+Codes: P - Passive, A - Active, U - Update, Q - Query, R - Reply,
+       r - reply Status, s - sia Status
+
+P 192.168.23.0/24, 1 successors, FD is 170393600, tag is 1
+        via 10.0.1.2 (170393600/104857600), Ethernet0/1
+P 192.168.25.0/24, 1 successors, FD is 170393600, tag is 1
+        via 10.0.1.2 (170393600/104857600), Ethernet0/1
+P 192.168.12.0/24, 1 successors, FD is 150732800, tag is 1
+        via 10.0.1.2 (150732800/85196800), Ethernet0/1
+P 10.0.1.0/24, 1 successors, FD is 131072000
+        via Connected, Ethernet0/1
+P 192.168.45.0/24, 1 successors, FD is 720023318, tag is 1
+        via 10.0.1.2 (720023318/654487318), Ethernet0/1
+P 10.0.0.0/24, 1 successors, FD is 131072000
+        via Connected, Ethernet0/0
+P 10.0.2.0/24, 2 successors, FD is 196608000
+        via 10.0.0.2 (196608000/131072000), Ethernet0/0
+        via 10.0.1.2 (196608000/131072000), Ethernet0/1
+P 192.168.14.0/24, 1 successors, FD is 360448000, tag is 1
+        via 10.0.1.2 (360448000/294912000), Ethernet0/1
+P 3.3.3.0/24, 1 successors, FD is 760000278, tag is 1
+        via 10.0.1.2 (760000278/694464278), Ethernet0/1
+
+jermalne#show ip eigrp 1 topology
+EIGRP-IPv4 Topology Table for AS(1)/ID(192.168.14.1)
+Codes: P - Passive, A - Active, U - Update, Q - Query, R - Reply,
+       r - reply Status, s - sia Status
+
+P 192.168.23.0/24, 1 successors, FD is 15360
+        via 192.168.12.2 (15360/7680), Ethernet0/0
+        via 192.168.14.2 (97792/8192), Ethernet0/1
+P 192.168.25.0/24, 1 successors, FD is 15360
+        via 192.168.12.2 (15360/7680), Ethernet0/0
+        via 192.168.14.2 (90112/512), Ethernet0/1
+P 192.168.12.0/24, 1 successors, FD is 7680
+        via Connected, Ethernet0/0
+P 10.0.1.0/24, 1 successors, FD is 25600, tag is 2
+        via Redistributed (25600/0)
+P 192.168.45.0/24, 1 successors, FD is 23040
+        via 192.168.12.2 (23040/15360), Ethernet0/0
+        via 192.168.14.2 (89856/256), Ethernet0/1
+P 10.0.0.0/24, 1 successors, FD is 51200, tag is 2
+        via Redistributed (51200/0)
+P 10.0.2.0/24, 1 successors, FD is 25600, tag is 2
+        via Redistributed (25600/0)
+P 192.168.14.0/24, 1 successors, FD is 89600
+        via Connected, Ethernet0/1
+        via 192.168.12.2 (30720/23040), Ethernet0/0
+P 3.3.3.0/24, 1 successors, FD is 23040
+        via 192.168.12.2 (23040/15360), Ethernet0/0
+        via 192.168.14.2 (105472/15872), Ethernet0/1
+
+

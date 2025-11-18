@@ -1,0 +1,201 @@
+Building configuration...
+
+Current configuration : 3709 bytes
+!
+! Last configuration change at 07:35:11 UTC Sun Nov 10 2024
+!
+version 15.2
+service timestamps debug datetime msec
+service timestamps log datetime msec
+no service password-encryption
+service compress-config
+!
+hostname ACC_SITE2
+!
+boot-start-marker
+boot-end-marker
+!
+!
+enable secret 5 $1$Jmr0$RGvdtnTwEk24/F8vWkISi1
+!
+username eitan privilege 15 secret 5 $1$Uzdh$9Vi/.QNaGTamR5upNVazu/
+no aaa new-model
+!
+!
+!
+!
+!
+no ip routing
+ip arp inspection vlan 23,48,62
+!
+!
+!
+ip dhcp snooping vlan 1-300
+no ip dhcp snooping information option
+ip dhcp snooping
+ip domain-name eitan.lab
+no ip cef
+no ipv6 cef
+!
+!
+!
+spanning-tree mode pvst
+spanning-tree extend system-id
+!
+!
+! 
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+interface Ethernet0/0
+ description link to PC4 IT department
+ switchport access vlan 48
+ switchport mode access
+ ip arp inspection trust
+!
+interface Ethernet0/1
+ switchport access vlan 62
+ switchport mode access
+ shutdown
+!
+interface Ethernet0/2
+ switchport access vlan 62
+ switchport mode access
+ shutdown
+!
+interface Ethernet0/3
+ switchport access vlan 62
+ switchport mode access
+ shutdown
+!
+interface Ethernet1/0
+ switchport access vlan 62
+ switchport mode access
+ shutdown
+!
+interface Ethernet1/1
+ description link to R3
+ switchport trunk allowed vlan 23,48
+ switchport trunk encapsulation dot1q
+ switchport trunk native vlan 23
+ switchport mode trunk
+ ip arp inspection trust
+ ip dhcp snooping trust
+!
+interface Ethernet1/2
+ switchport access vlan 62
+ switchport mode access
+ shutdown
+!
+interface Ethernet1/3
+ switchport access vlan 62
+ switchport mode access
+ shutdown
+!
+interface Serial2/0
+ no ip address
+ no ip route-cache
+ shutdown
+ no fair-queue
+ serial restart-delay 0
+!
+interface Serial2/1
+ no ip address
+ no ip route-cache
+ shutdown
+ serial restart-delay 0
+!
+interface Serial2/2
+ no ip address
+ no ip route-cache
+ shutdown
+ serial restart-delay 0
+!
+interface Serial2/3
+ no ip address
+ no ip route-cache
+ shutdown
+ serial restart-delay 0
+!
+interface Serial3/0
+ no ip address
+ no ip route-cache
+ shutdown
+ serial restart-delay 0
+!
+interface Serial3/1
+ no ip address
+ no ip route-cache
+ shutdown
+ serial restart-delay 0
+!
+interface Serial3/2
+ no ip address
+ no ip route-cache
+ shutdown
+ serial restart-delay 0
+!
+interface Serial3/3
+ no ip address
+ no ip route-cache
+ shutdown
+ serial restart-delay 0
+!
+interface Vlan48
+ description management SVI fot IT
+ ip address 192.168.2.130 255.255.255.128
+ no ip route-cache
+!
+ip default-gateway 192.168.2.129
+ip forward-protocol nd
+!
+ip http server
+!
+ip ssh version 2
+ip ssh server algorithm encryption aes128-ctr aes192-ctr aes256-ctr
+ip ssh client algorithm encryption aes128-ctr aes192-ctr aes256-ctr
+!
+!
+access-list 10 permit 192.168.1.0 0.0.0.255
+access-list 10 permit 192.168.2.128 0.0.0.127
+access-list 10 remark acl for vty lines
+!
+!
+!
+control-plane
+!
+banner exec ^C
+***********************************************************************
+*                          Welcome to the System                       *
+*            You are now in privileged EXEC mode. Proceed with care.   *
+*     Ensure all configurations align with organizational standards.   *
+***********************************************************************
+^C
+banner login ^C
+**************************************************************************
+*                     Unauthorized Access Prohibited                      *
+*               Access restricted to authorized personnel only            *
+*             Any unauthorized access will be prosecuted by law           *
+**************************************************************************
+^C
+!
+line con 0
+ logging synchronous
+ login local
+line aux 0
+line vty 0 4
+ access-class 10 in
+ login local
+ transport input ssh
+!
+!
+!

@@ -1,0 +1,22 @@
+TASK 1 - AS 1 
+
+All IP addresses have been preconfigured as specified in the topology picture.
+Configure EIGRP on all routers, disable auto-summary. Achieve full connectivity.
+Change the EIGRP metrics so only delay is being used for the calculations.
+Change the delay on every interface (including the loopback) to 300usec
+If you send a ping from router Jermaine to the loopback of router Michael it should use the link to router Jackie. (succesor route)
+Change the delays on the routers so the link between Jermaine and Tito becomes a feasible succesor route to reach the loopback.
+Change the delays so traffic will be sent in a 1:5 ratio. Use the “show ip route 3.3.3.0” command to check this.
+
+TASK 2 - AS 2: 
+
+Configure EIGRP for AS 2 with the appropriate networks.
+Disable auto-summary to ensure subnets are advertised correctly.
+Verify connectivity within AS 2 by checking the routing tables and using ping tests.
+Redistribute Routes Between AS 1 and AS 2:
+Use route redistribution to share routes between AS 1 and AS 2.
+Apply route maps to control which routes are redistributed and to prevent routing loops.
+Avoid Redistributing Routes Back to Their Source AS:
+Use route tagging to mark routes as they are redistributed into the other autonomous system.
+Filter routes based on their tags to ensure that routes originating in one AS are not redistributed back into it.
+

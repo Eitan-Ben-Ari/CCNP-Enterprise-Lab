@@ -1,0 +1,16 @@
+---
+- name: Display running config and show output
+  hosts: "{{ target_device }}"
+  gather_facts: false
+  connection: local
+  tasks:
+    - name: Show running configuration
+      ios_command:
+        commands:
+          - show running-config
+        timeout: 30
+      register: result  # שומר את הפלט במשתנה result
+
+    - name: Display running config in lines
+      debug:
+        msg: "{{ result.stdout_lines }}"

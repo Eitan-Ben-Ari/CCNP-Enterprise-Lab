@@ -1,0 +1,111 @@
+GATE
+
+interface Ethernet0/0
+ ip address 192.168.1.1 255.255.255.0
+ ip nat inside
+ ip virtual-reassembly in
+ ip policy route-map PBR
+ip nat inside source route-map TCP_NAT interface Ethernet0/1 overload
+ip nat inside source route-map UDP_NAT interface Ethernet0/2 overload
+!
+ip access-list extended TCP
+ permit tcp any any
+ permit icmp any any
+ip access-list extended UDP
+ permit udp any any
+!
+!
+route-map PBR permit 10
+ match ip address TCP
+ set ip next-hop 200.0.0.2
+!
+route-map PBR permit 20
+ match ip address UDP
+ set ip next-hop 200.0.0.6
+!
+route-map PBR deny 30
+ match ip address 1
+ set interface Null0
+!
+route-map TCP_NAT permit 10
+ match ip address TCP
+!
+route-map UDP_NAT permit 10
+ match ip address UDP
+!
+!
+access-list 1 permit 0.0.0.0
+!
+
+
+SYSLOG_CLIENT RUN _
+
+
+ip route 0.0.0.0 0.0.0.0 192.168.1.1
+!
+logging trap debugging
+logging host 200.0.0.18 transport udp port 3333
+!
+!
+
+
+ISP_ALASKA RUN _
+
+
+interface Ethernet0/0
+ ip address 200.0.0.19 255.255.255.248
+ ip virtual-reassembly in
+ ip ospf 1 area 0
+!
+interface Ethernet0/1
+ ip address 200.0.0.2 255.255.255.252
+ ip virtual-reassembly in
+ ip ospf network point-to-point
+ ip ospf 1 area 0
+!
+
+ISP_ARIZONA RUN _
+
+
+!
+interface Ethernet0/0
+ ip address 200.0.0.17 255.255.255.248
+ ip nat inside
+ ip virtual-reassembly in
+!
+interface Ethernet0/1
+ ip address 200.0.0.6 255.255.255.252
+ ip nat outside
+ ip virtual-reassembly in
+ ip ospf 1 area 0
+
+
+FORWARDER RUN _
+
+
+interface Ethernet0/0
+ ip address 200.0.0.18 255.255.255.248
+ ip nat outside
+ ip virtual-reassembly in
+ ip ospf 1 area 0
+!
+interface Ethernet0/1
+ ip address dhcp
+!
+ip nat inside source static tcp 192.168.1.234 22 200.0.0.18 2222 extendable
+ip nat inside source static udp 192.168.1.234 514 200.0.0.18 3333 extendable
+!
+
+SSH_CLIENT 
+sudo ip addr add 192.168.1.2/24 dev eth0
+ip route default via 192.168.1.1
+ssh -p 2222 sharo@200.0.0.18 
+
+WINDOWS PC(SSH SERVER) 
+route ADD 200.0.0.0 MASK 255.255.255.224 {forwarder addess As next-hop}
+ ### check your firewall, it might block tcp/icmp/udp from a public address (200.0.0.5) is suspious.
+ 
+ if needed!
+ New-NetFirewallRule -DisplayName "Allow UDP 514 from 200.0.0.0/24" -Direction Inbound -Protocol UDP -LocalPort 514 -RemoteAddress 200.0.0.0/24 -Action Allow -Enabled True
+ New-NetFirewallRule -DisplayName "Allow TCP 22 from 200.0.0.0/24" -Direction Inbound -Protocol TCP -LocalPort 22 -RemoteAddress 200.0.0.0/24 -Action Allow -Enabled True
+

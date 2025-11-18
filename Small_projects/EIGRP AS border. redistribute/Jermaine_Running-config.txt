@@ -1,0 +1,72 @@
+jermalne#wr
+Building configuration...
+[OK]
+jermalne#sh run
+Building configuration...
+
+Current configuration : 2465 bytes
+!
+! Last configuration change at 20:29:59 UTC Sun Feb 9 2025
+!
+version 15.5
+service timestamps debug datetime msec
+service timestamps log datetime msec
+no service password-encryption
+!
+hostname jermalne
+!
+boot-start-marker
+boot-end-marker
+!
+
+!
+interface Ethernet0/0
+ ip address 192.168.12.1 255.255.255.0
+ ip load-sharing per-packet
+ delay 30
+!
+interface Ethernet0/1
+ ip address 192.168.14.1 255.255.255.0
+ ip load-sharing per-packet
+ delay 350
+!
+interface Ethernet0/2
+ ip address 10.0.1.2 255.255.255.0
+!
+interface Ethernet0/3
+ ip address 10.0.2.2 255.255.255.0
+!
+!
+router eigrp 1
+ metric weights 0 0 0 1 0 0
+ variance 5
+ network 192.168.12.0
+ network 192.168.14.0
+ redistribute eigrp 2 route-map add-as2-route-to-as1
+!
+!
+router eigrp SEC_AS
+ !
+ address-family ipv4 unicast autonomous-system 2
+  !
+  topology base
+   redistribute eigrp 1 route-map add-as1-route-to-as2
+  exit-af-topology
+  network 10.0.0.0 0.0.3.255
+ exit-address-family
+!
+
+route-map add-as2-route-to-as1 deny 10
+ match tag 1
+!
+route-map add-as2-route-to-as1 permit 20
+ set tag 2
+!
+route-map add-as1-route-to-as2 deny 10
+ match tag 2
+!
+route-map add-as1-route-to-as2 permit 20
+ set tag 1
+!
+end
+

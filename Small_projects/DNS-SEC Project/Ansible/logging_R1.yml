@@ -1,0 +1,29 @@
+- name: Configure logging on Cisco router
+  hosts: Routers
+  gather_facts: no
+  become: yes
+  tasks:
+
+    - name: Enable logging on router
+      cisco.ios.ios_config:
+        lines:
+          - logging host 192.168.68.223
+          - logging trap informational
+          - logging console informational
+          - logging buffered 8192 informational
+          - service timestamps log datetime msec
+      register: logging_output
+
+    - name: Display the logging configuration
+      debug:
+        var: logging_output
+
+    - name: Verify logging settings
+      cisco.ios.ios_command:
+        commands:
+          - show running-config | include logging
+      register: verify_output
+
+    - name: Show logging settings on router
+      debug:
+        var: verify_output.stdout_lines

@@ -1,0 +1,6 @@
+zone "Eitan.itlab.com" {
+    type master;
+    file "/etc/bind/db.Eitan.itlab.com.signed";
+    dnssec-policy default;
+    inline-signing yes;
+};
