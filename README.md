@@ -28,18 +28,22 @@ Everything in the overlay is deployed by Ansible – zero manual CLI:
 | Post-deployment config backup | `playbooks/small_tasks/wr+save_backup.yml`       | –         |
 
 
+## Exact Repository Structure
+
+```plaintext
+.
 ├── ansible.cfg
-├── backups/                              → running-config after every deployment
+├── backups/                              # running-config after every deployment
 │   ├── R1.EITAN.COM/running_config.txt
 │   ├── R2.EITAN.COM/running_config.txt
 │   └── ... (all 9 routers + switches)
 ├── group_vars/all.yml
 ├── hosts
-├── host_vars/                            → per-device variables
+├── host_vars/                            # per-device variables
 ├── inventory.yml
 ├── playbooks/
-│   ├── main.yml                          → master playbook
-│   ├── informational/                    → fact gathering & debugging playbooks
+│   ├── main.yml                          # master playbook
+│   ├── informational/                    # fact gathering & debugging playbooks
 │   └── small_tasks/
 │       ├── no_domain_lookup.yml
 │       ├── radi_tacacs_timeout.yml
@@ -51,6 +55,5 @@ Everything in the overlay is deployed by Ansible – zero manual CLI:
 │   ├── l3_interfaces/→ l3_interfaces.j2
 │   └── ospf_role/    → ospf.j2
 └── templates/        → all Jinja2 templates
-
 
 
