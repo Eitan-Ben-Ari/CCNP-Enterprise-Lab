@@ -1,0 +1,71 @@
+      
+l3_interfaces:
+
+  - name: Ethernet0/1
+    description:  Uplink to Collapsed_Core D2.EITAN.COM, made by ansible
+    ipv4: 192.168.1.29/31
+    no_switchport: True
+
+
+  - name: Ethernet0/2
+    description: Uplink to Collapsed_Core D1.EITAN.COM, made by ansible
+    ipv4: 192.168.1.22/30
+    no_switchport: True
+    
+
+  - name: vlan20
+    description: SVI for vlan 20 , made by ansible
+    ipv4: 10.0.20.1/29
+    
+  - name: loopback0
+    description:  Loopback for SSH Managemnet, made by ansible
+    ipv4: 4.4.4.4/32
+    
+
+  
+
+################################################ OSPF VARS
+
+
+ospf_ipv4: 
+  - process_id: 1
+    router_id: 4.4.4.4
+    areas:
+      - name: 0
+        authentication: true
+        networks:
+            
+          - ip: 10.0.20.0
+            wildcard: 0.0.0.7
+          - ip: 192.168.1.20
+            wildcard: 0.0.0.3
+          - ip: 192.168.1.28
+            wildcard: 0.0.0.1
+          - ip: 4.4.4.4
+            wildcard: 0.0.0.0
+        
+        psassive_interface: 
+         - Vlan20
+        p2p_interfaces:
+         
+          - name: Ethernet0/1
+          - name: Ethernet0/2
+          
+
+
+############################################################################## L2 VARS
+
+
+L2:
+  vlans: 
+    - id: 20
+      name: CORP2
+    - id: 999
+      name: Native
+  access_interfaces:
+    - name: Ethernet0/3
+      vlan: 20
+  dhcp_pools: 
+  - name: CORP2
+    network: 10.0.20.0 255.255.255.248
+    default_router: 10.0.20.1

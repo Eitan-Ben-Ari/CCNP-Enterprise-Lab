@@ -1,0 +1,13 @@
+---
+
+- name: push vlans to devices
+  cisco.ios.ios_vlans:
+    config:
+      - name: "{{item['name']}}"
+        vlan_id: "{{item['id']}}"
+        state: active
+    state: merged
+
+
+  loop: "{{L2['vlans']}}"
+  when: L2 is defined

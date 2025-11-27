@@ -1,0 +1,116 @@
+      
+l3_interfaces:
+
+  - name: Ethernet0/0
+    description:  Uplink to Edge Router R2.EITAN.COM, made by ansible
+    ipv4: 192.168.2.1/30
+    no_switchport: True
+
+  - name: Ethernet1/1
+    description:  Uplink to Edge Router R6.EITAN.COM , made by ansible
+    ipv4: 192.168.2.13/30
+    no_switchport: True
+
+  - name: vlan10
+    description: SVI for vlan 10 , made by ansible
+    ipv4: 10.0.10.18/28
+    hsrp:
+      group: 10
+      version: 2
+      priority: 120
+      Virtual_ip: 10.0.10.19
+      preempt: true
+      key_chain: HSRP
+
+  - name: vlan20
+    description: SVI for vlan 20 , made by ansible
+    ipv4: 10.0.20.9/29
+    hsrp: 
+      group: 20
+      version: 2
+      priority: 80
+      Virtual_ip: 10.0.20.11
+      preempt: true
+      key_chain: HSRP_2
+
+  - name: Loopback0
+    description: loopback for ssh remote connection , made by ansible
+    ipv4: 6.6.6.6/24
+
+  
+  
+
+
+
+
+################################################ OSPF VARS
+
+
+ospf_ipv4: 
+  - process_id: 1
+    router_id: 6.6.6.6
+    areas:
+      - name: 0
+        authentication: true
+        networks:
+            
+          - ip: 10.0.10.16
+            wildcard: 0.0.0.15
+          - ip: 10.0.20.8
+            wildcard: 0.0.0.7
+          - ip: 192.168.2.0
+            wildcard: 0.0.0.3
+          - ip: 192.168.2.12
+            wildcard: 0.0.0.3
+          - ip: 6.6.6.6
+            wildcard: 0.0.0.0
+         
+         
+        passive_interface:
+          - Vlan10
+          - Vlan20
+          
+        p2p_interfaces:
+          - name: Ethernet0/0
+          - name: Ethernet1/1
+          - name: vlan10
+          - name: vlan20
+            cost: 5
+
+
+############################################################################## L2 VARS
+
+L2:
+  vlans: 
+    - id: 10
+      name: CORP1
+    - id: 20
+      name: CORP2
+    - id: 999
+      name: Native
+  snooping: false
+
+  trunk_interfaces: 
+    - name: Port-Channel1
+      allowed_vlans: 10, 20
+      native_vlan: 999
+    - name: Ethernet1/0
+      allowed_vlans: 20
+      native_vlan: 999
+    - name: Ethernet0/3
+      allowed_vlans: 10
+      native_vlan: 999
+ 
+
+
+
+LAG:
+  name: Port-Channel1
+  members: 
+    - int: Ethernet0/1
+      mode: active
+    - int: Ethernet0/2
+      mode: active
+  
+  
+  

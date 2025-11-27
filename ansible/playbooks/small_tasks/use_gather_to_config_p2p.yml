@@ -1,0 +1,31 @@
+
+ - name: "Loop Int's For confiugration of ospf network-type"
+   hosts: all
+   connection: network_cli
+   gather_facts: False
+   tasks:
+    - name: gather
+      cisco.ios.ios_facts:
+        gather_subset: all
+      register: facts
+      
+    - name: configure network type point_to_point if subnet_mask is /30 or /31
+      cisco.ios.ios_ospf_interfaces:
+        config:
+          - name: "{{item}}"
+            address_family:
+              - afi: ipv4
+                network: 
+                  point_to_point: True
+        state: "merged"
+      loop: "{{facts.ansible_facts.ansible_net_interfaces | dict2items | map(attribute='key') | list}}" # here i define the item i want to loop trough
+      when:  
+        - facts.ansible_facts.ansible_net_interfaces[item].ipv4 != [] # here im sayin - avoid if there is no ip address
+        - facts.ansible_facts.ansible_net_interfaces[item].ipv4[0].subnet == '30' or facts.ansible_facts.ansible_net_interfaces[item].ipv4[0].subnet == '31'
+        #here im sayin avoid if the subnet musk isnt 255.255.255.252/255.255.255.254
+
+
+      
+
+    
+

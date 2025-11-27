@@ -1,0 +1,140 @@
+- name: removing configuration...
+  hosts: Edges
+  gather_facts: False
+  tasks:
+  - name: erase policy-maps before provisioning 1 :)))))
+    cisco.ios.ios_config:
+      lines:
+
+        - no policy-map {{item}}
+    loop: "{{policy_maps}}"  
+    register: commands1
+
+    
+  - name: erase class-maps before provisioning 2  :)))))
+    cisco.ios.ios_config:
+      lines:
+
+        - no class-map {{item}}
+    loop: "{{class_maps}}"
+    register: commands2
+
+        
+
+  - name: erase ACLS before provisioning 3 :)))))
+    cisco.ios.ios_config:
+      lines:
+
+        - no ip access-list extended {{item}}
+        - no ip access-list standard {{item}}
+
+    loop: "{{extended_acls}}"
+    register: commands3
+
+
+  - name: erase ospf before provisioning 4  :)))))
+    cisco.ios.ios_config:
+      lines:
+
+        - no router ospf {{item}}
+        
+    loop: "{{ospf_processes}}"
+    tags: [one]
+    register: commands
+  
+
+
+  - name: erase DMVPN+ipsec tunnel configuration :)))))
+    cisco.ios.ios_config:
+      lines:
+        - interface tunnel 1
+        - exit
+        - default interface tunnel 1
+        
+        
+  
+
+  - name: erase ipsec profile/policy/keyring/transform_set  & IKEv2 before provisioning 5 :)))))
+    cisco.ios.ios_config:
+      lines:
+        - crypto ipsec profile IKEV2_IPSEC_PROFILE
+        - crypto ikev2 policy IKEV2_POLICY
+        - crypto ikev2 profile IKEV2_PROFILE
+        - crypto ikev2 keyring IKEV2_KEYRING 
+        - crypto ipsec transform-set IKEV2_TRANSFORM_SET esp-aes 256 esp-sha256-hmac
+        - crypto ikev2 proposal IKEV2_PROPOSAL 
+        - no crypto ipsec profile IKEV2_IPSEC_PROFILE
+        - no crypto ikev2 policy IKEV2_POLICY
+        - no crypto ikev2 profile IKEV2_PROFILE
+        - no crypto ikev2 keyring IKEV2_KEYRING 
+        - no crypto ipsec transform-set IKEV2_TRANSFORM_SET esp-aes 256 esp-sha256-hmac
+        - no crypto ikev2 proposal IKEV2_PROPOSAL 
+        
+
+  - name: erase overlay BGP before provisioning 6  :)))))
+    cisco.ios.ios_config:
+      lines:
+
+        - no address-family ipv4 vrf {{ bgp['vrf'][0]['name'] }}
+      parents: 
+        - router bgp {{ bgp.asn }}
+  
+  - name: erase PAT interfaces commands before provisioning 7  :)))))
+    cisco.ios.ios_config:
+      lines:
+
+        - no ip nat inside
+      parents: 
+        - interface {{item}}
+    loop: "{{qos_private.lan_interfaces}}" 
+    when: qos_private.lan_interfaces | length > 0
+  
+  - name: erase PAT interfaces commands before provisioning 8  :)))))
+    cisco.ios.ios_config:
+      lines:
+
+        - no ip nat inside
+      parents: 
+        - interface {{qos_private.lan_interfaces}}
+    when: qos_private.lan_interfaces is string
+  
+  - name: erase PAT interfaces commands before provisioning 9  :)))))
+    cisco.ios.ios_config:
+      lines:
+
+        - no ip nat outside
+      parents: 
+        - interface {{qos_private.wan_interface}}
+    when: inventory_hostname != "R4.EITAN.COM"
+  
+  - name: erase PAT interfaces commands before provisioning 10  :)))))
+    cisco.ios.ios_config:
+      lines:
+
+        - ip nat inside source list NAT-IN-LOCAL interface {{qos_private.wan_interface}} vrf {{nat.nat_vrf}} overload
+        - no ip nat inside source list NAT-IN-LOCAL interface {{qos_private.wan_interface}} vrf {{nat.nat_vrf}} overload
+  
+  - name: erase VTY-line configuration before provisioning 11  :)))))
+    cisco.ios.ios_config:
+      lines:
+        - no ip access-list standard SSH_MGMT
+        - line vty {{SSH_MGMT.lines}} 
+        - no access-class SSH_MGMT in vrfname {{SSH_MGMT.vrf}}
+
+  - name: erase all interfaces apart from WAN 12 :)))))
+    cisco.ios.ios_config:
+      lines:
+        - default interface {{item}}
+    loop: "{{qos_private.lan_interfaces}}"
+   
+  - name: erase all interfaces apart from WAN 13 :)))))
+    cisco.ios.ios_config:
+      lines:
+        - interface loopback 0
+        - interface loopback 1
+        - no interface loopback 0
+        - no interface loopback 1
+
+   
+        
+   

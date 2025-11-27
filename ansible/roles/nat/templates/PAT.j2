@@ -1,0 +1,16 @@
+{% if nat is defined and nat.nat_range is defined and qos_private.wan_interface is defined and qos_private.lan_interfaces is defined %}
+
+interface {{qos_private.wan_interface}}
+  ip nat outside
+{% if qos_private.lan_interfaces is defined and qos_private.lan_interfaces is not string %}
+{% for interface in qos_private.lan_interfaces %}
+interface {{interface}}
+  ip nat inside
+{% endfor %}
+{% else %}
+interface {{qos_private.lan_interfaces}}
+  ip nat inside
+{% endif %}
+
+ip nat inside source list NAT-IN-LOCAL interface {{qos_private.wan_interface}} vrf {{nat.nat_vrf}} overload
+{% endif %}

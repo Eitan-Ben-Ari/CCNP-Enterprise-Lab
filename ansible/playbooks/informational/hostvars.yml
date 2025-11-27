@@ -1,0 +1,9 @@
+---
+- name: show ospf vars of Router8
+  hosts: localhost
+  gather_facts: no
+
+  tasks:
+    - name: "TASK 1"
+      debug: 
+        msg: "{{hostvars['D6.EITAN.COM']['L2']}}"

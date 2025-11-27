@@ -1,0 +1,6 @@
+
+SSH_MGMT:
+  Station: 192.168.3.186
+  lines: 0 4
+  vrf: site_2
+

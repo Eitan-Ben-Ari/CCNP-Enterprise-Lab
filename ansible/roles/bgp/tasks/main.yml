@@ -1,0 +1,7 @@
+
+- name: push bgp_commands 
+  cisco.ios.ios_config:
+    src: "neighbor.j2"
+  register: bgp
+  notify: show_bgp_commands
+

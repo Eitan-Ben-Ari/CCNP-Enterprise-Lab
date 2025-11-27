@@ -1,0 +1,9 @@
+{% if SSH_MGMT is defined %}
+ip access-list standard SSH_MGMT
+  permit host {{ SSH_MGMT.Station }}
+
+line vty {{ SSH_MGMT.lines }}
+  transport input ssh
+  access-class SSH_MGMT in vrfname {{SSH_MGMT.vrf }}
+
+{% endif %}

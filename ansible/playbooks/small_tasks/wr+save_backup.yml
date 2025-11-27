@@ -1,0 +1,37 @@
+- name: save
+  hosts: Edges
+  connection: network_cli
+  gather_facts: False
+
+  vars:
+    backup_dir: "/home/eitan/Documents/ansible/backups/{{inventory_hostname}}"
+
+  tasks:
+    
+    - name: ensure file exists
+      ansible.builtin.file:
+        path: "{{backup_dir}}"
+        state: directory
+        mode: '0755'
+      delegate_to: localhost
+      tags: [two]
+
+    - name: save ram
+      cisco.ios.ios_config:
+        save_when: always
+      tags: [one]
+
+    - name: register Running-config command output
+      cisco.ios.ios_command:
+        commands:
+          - show running-config
+      register: running_config_output
+      tags: [two]
+
+    - name: Write to file on ansible controller
+      ansible.builtin.copy:
+        content: "{{running_config_output.stdout[0] }}"
+        dest: "{{backup_dir}}/running_config.txt"
+      delegate_to: localhost
+      tags: [two]
+      

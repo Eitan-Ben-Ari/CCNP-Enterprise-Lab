@@ -1,0 +1,17 @@
+#SPDX-License-Identifier: MIT-0
+---
+# tasks file for l3_interfaces
+
+- name: push l3_interfaces configuration
+  cisco.ios.ios_config:
+    src: l3_interfaces.j2
+  register: l3_interfaces
+
+- name: print l3_interfaces commands
+  debug:
+    msg: "{{l3_interfaces.commands}}"
+  when: l3_interfaces.commands is defined
+  
+# - name: Debug rendered output
+#   debug:
+#     msg: "{{ lookup('template', 'l3_interfaces.j2') }}"

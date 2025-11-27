@@ -1,0 +1,56 @@
+all:
+  children:
+    site2:
+      children:
+        site1_wan_routers:
+          hosts:
+            R1.EITAN.COM: {}
+            R8.EITAN.COM: {}
+            
+        site1_dis_core:
+          hosts:
+            D1.EITAN.COM: {}
+            D2.EITAN.COM: {}
+            
+        site1_acc:
+          hosts:
+            D3.EITAN.COM: {}
+            D4.EITAN.COM: {}
+    site1:
+      children:
+        site2_wan_routers:
+          hosts:
+            R2.EITAN.COM: {}
+            R6.EITAN.COM: {}
+        site2_dis_core:
+          hosts:
+            D7.EITAN.COM: {}
+            D6.EITAN.COM: {}
+        site2_acc:
+          hosts:
+            D9.EITAN.COM: {}
+            D8.EITAN.COM: {}
+    hub:
+      hosts:
+            R4.EITAN.COM: {}
+    Edges:
+      children:
+        site1_wan_routers: {}
+        site2_wan_routers: {}
+        hub: {}
+    Switches:
+      children:
+        site1_dis_core: {}
+        site1_acc: {}
+        site2_dis_core: {}
+        site2_acc: {}
+    Switches_site_1:
+      children:
+        site1_dis_core: {}
+        site1_acc: {}
+    Switches_site_2:
+     children:
+       site2_dis_core: {}
+       site2_acc: {}
+            
+

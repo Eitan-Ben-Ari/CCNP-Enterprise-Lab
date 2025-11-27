@@ -1,0 +1,27 @@
+# #SPDX-License-Identifier: MIT-0
+# ---
+# # # tasks file for L2
+
+- name: include vlans
+  include_tasks: vlans.yml
+
+
+- name: l2_interfaces
+  include_tasks: l2_interfaces.yml
+
+
+- name: LAG
+  include_tasks: LAG.yml
+
+- name: push l2_security template
+  cisco.ios.ios_config:
+    src: l2_security.j2
+
+- name: push VTY access-class 
+  cisco.ios.ios_config:
+    src: vty.j2
+
+
+- name: push HSRP & RSTP 
+  cisco.ios.ios_config:
+    src: hsrp_stp.j2

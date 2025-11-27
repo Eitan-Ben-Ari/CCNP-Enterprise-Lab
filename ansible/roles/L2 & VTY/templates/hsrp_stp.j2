@@ -1,0 +1,29 @@
+{% if L2.vlans is defined %}
+spanning-tree mode rapid-pvst
+{% for vlan in L2.vlans %}
+{% if vlan.root_bridge is defined and vlan.root_bridge  %}
+spanning-tree vlan {{ vlan.id }} root primary
+{% elif vlan.second_root_bridge is defined and vlan.second_root_bridge  %}
+spanning-tree vlan {{ vlan.id }} root secondary
+{% endif %}
+{% endfor %}
+
+{% if l3_interfaces is defined %}
+{% for interface in l3_interfaces%}
+{% if interface.hsrp is defined %}
+
+interface {{ interface.name }}
+  standby version {{ interface.hsrp.version }}
+  standby {{ interface.hsrp.group }} ip {{interface.hsrp.Virtual_ip }}
+  standby {{ interface.hsrp.group }} priority {{ interface.hsrp.priority }}
+  standby {{ interface.hsrp.group }} authentication md5 key-chain {{ interface.hsrp.key_chain }}
+{% if interface.hsrp.preempt is defined and interface.hsrp.preempt %}
+  standby {{ interface.hsrp.group }} preempt
+{% endif %}
+
+{% endif %}
+{% endfor %}
+{% endif %}
+
+{% endif %}
+

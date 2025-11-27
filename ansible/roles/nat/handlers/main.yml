@@ -1,0 +1,9 @@
+#SPDX-License-Identifier: MIT-0
+---
+# handlers file for NAT
+
+ - name: show_pat_commands
+   debug:
+    msg: "CONFIG CHANGE: {{pat.commands}}"
+   listen: print_pat_commands
+ 

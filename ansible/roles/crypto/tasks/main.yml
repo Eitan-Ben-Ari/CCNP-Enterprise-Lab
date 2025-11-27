@@ -1,0 +1,21 @@
+
+
+---
+ 
+    - name: "push the jinja2 ipsec configuration"
+      cisco.ios.ios_config:
+        src: "ipsec.j2"
+      register: ipsec
+      notify: show_ipsec_commands
+      tags:
+        - ipsec  # only if a configuration change was actually made...
+
+
+    - name: "push the jinja2 mgre configuration"
+      cisco.ios.ios_config:
+        src: "dmvpn_mgre.j2"
+      register: mgre
+      tags:
+        - mgre  # only if a configuration change was actually made...
+
+  

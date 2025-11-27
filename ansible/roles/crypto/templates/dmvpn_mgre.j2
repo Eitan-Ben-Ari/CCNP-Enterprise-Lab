@@ -1,0 +1,36 @@
+{% if tunnels_vars is defined %}
+{% for tunnel in tunnels_vars %}
+ interface {{tunnel.tunnel}} 
+  description {{tunnel.description}}
+  tunnel mode {{tunnel.mode}}
+  qos pre-classify
+  tunnel source {{tunnel.source_interface}}
+  ip mtu {{tunnel.mtu}}
+  ip tcp adjust-mss {{tunnel.mss}}
+  ip ospf net {{tunnel.ospf_net_type}}
+  tunnel vrf {{tunnel.underlay_vrf}}
+  ip nhrp authentication {{tunnel.shared_key}}
+  ip nhrp network-id {{tunnel.nhrp_net_id}}
+{% endfor %}
+{% endif %}
+
+{% if tunnel_vars is defined %}
+{% for tunnel in tunnel_vars %}
+ interface {{tunnel.tunnel}}
+  ip address {{ tunnel.ip_address | ipaddr('address') }} {{ tunnel.ip_address | ipaddr('netmask') }}
+  ip vrf forwarding {{tunnel.vrf}}
+  ip nhrp {{ tunnel.phase_3_action }}
+{% if tunnel.hub_tunnel_ip is defined  %}
+  ip nhrp map {{tunnel.hub_tunnel_ip}} {{tunnel.hub_NBMA_ip}}
+  ip nhrp map multicast {{tunnel.hub_NBMA_ip}}
+  ip nhrp nhs {{tunnel.hub_tunnel_ip}} 
+ {% endif  %}
+  tunnel protection ipsec profile {{ crypto.ipsec.profile.name }}
+{% endfor %}
+{% endif %}
+
+
+
+
+
+

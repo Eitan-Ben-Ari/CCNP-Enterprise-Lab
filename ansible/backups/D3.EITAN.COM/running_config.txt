@@ -1,0 +1,244 @@
+Building configuration...
+
+Current configuration : 5627 bytes
+!
+! Last configuration change at 13:54:35 IST Tue Aug 5 2025 by admin
+!
+version 17.16
+service timestamps debug datetime msec
+service timestamps log datetime msec
+service compress-config
+!
+hostname D3
+!
+boot-start-marker
+boot-end-marker
+!
+shell processing full
+!
+logging discriminator EXCESS severity drops 6 msg-body drops EXCESSCOLL 
+logging buffered 50000
+logging console discriminator EXCESS
+aaa new-model
+!
+!
+aaa authentication login default group radius local
+aaa authorization exec default group radius local 
+!
+!
+aaa session-id common
+!
+!
+!
+clock timezone IST 2 0
+no ip icmp rate-limit unreachable
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+ip audit notify log
+ip audit po max-events 100
+ip name-server 192.168.183.4
+no ip domain lookup
+ip domain name itlab
+no ip cef
+login on-success log
+ipv6 unicast-routing
+ipv6 cef
+!
+!
+!
+!
+!
+!
+!
+!
+crypto pki trustpoint TP-self-signed-2048003
+ enrollment selfsigned
+ subject-name cn=IOS-Self-Signed-Certificate-2048003
+ revocation-check none
+ rsakeypair TP-self-signed-2048003
+ hash sha512
+!
+!
+crypto pki certificate chain TP-self-signed-2048003
+ certificate self-signed 01
+  3082032A 30820212 A0030201 02020101 300D0609 2A864886 F70D0101 0D050030 
+  2E312C30 2A060355 04030C23 494F532D 53656C66 2D536967 6E65642D 43657274 
+  69666963 6174652D 32303438 30303330 1E170D32 35303830 32313734 3533315A 
+  170D3335 30383032 31373435 33315A30 2E312C30 2A060355 04030C23 494F532D 
+  53656C66 2D536967 6E65642D 43657274 69666963 6174652D 32303438 30303330 
+  82012230 0D06092A 864886F7 0D010101 05000382 010F0030 82010A02 82010100 
+  87638C6B A03566E8 B375AC69 DC193C26 20E30E51 0215FEAB 2EA42474 B91B3B50 
+  822B46CA B03CB26A 2E08D87B ED40EEB4 403DE71F 4BCF2D9D 7B9CF893 08A2EC7A 
+  5DE36F4C C4ED20C9 0624C213 9C14A589 3D25B219 525E89B6 62824CA5 86564F6E 
+  2E5A4A1A 33CA66D8 15F2094C E98210C1 78BD040C A2F0D581 08013025 FD5F361F 
+  0A96C286 108768A7 870957C5 8C80AED3 3504AAD6 04AC0FAB 554DD32B 35FEE995 
+  E3C3D686 E31803F1 2FC69DDE 33A83FE7 C59B9599 8CDDB072 AFC4A27D 2B342379 
+  AF12E991 9703B025 6C5C06FE 0115B70B AB523E45 E792FDE5 0FE7E309 2CADDD70 
+  EDED78D6 FF6DB2CA D7CFDB6C 604E15D0 8F5CF3A4 2DAAF28F 7E0434EA 1C0CED33 
+  02030100 01A35330 51301D06 03551D0E 04160414 3E75790A AB34E7F0 8FDC1869 
+  F4C7454A 4D726747 301F0603 551D2304 18301680 143E7579 0AAB34E7 F08FDC18 
+  69F4C745 4A4D7267 47300F06 03551D13 0101FF04 05300301 01FF300D 06092A86 
+  4886F70D 01010D05 00038201 01004557 470FC832 B132C792 6433E05D 7D88B29B 
+  F59FE843 302039F9 9F74AC25 9ABC2BC2 1070370C BECE3E66 4130A2BC 88C9F29F 
+  51B3DA9D 43BF94E4 920F14CA 90C20DA0 16183FA4 2410FF3E FF80970E 00EFB7DB 
+  4C97E346 DA5FBBC7 F6E6AC9A A65E962A 6ECD9E8B CAFC011E E1E111F0 9F26A16C 
+  88A1E762 0E1A7358 0709BA73 11EC7F52 736F23E7 158479F5 5E8DC7F3 82F4C148 
+  60D50F0F EAF1F857 8C7B5C7A 775330E8 AA9771E5 6E6024D6 63EAFF10 FE877C4A 
+  A7AAB9FB 4658D199 2513BD65 D865B7D0 3B33D7E8 5FC74472 F9A078B5 7468C7E2 
+  1DE4DA96 9584831C 37FD1311 D87AE8EB 8543B5EB C4AD4383 AE9A3BD3 98ED1904 
+  E33E86ED 67A0434D DE779165 EC05
+  	quit
+!
+!
+memory free low-watermark processor 53283
+!
+!
+spanning-tree mode pvst
+spanning-tree extend system-id
+!
+!
+username eitan privilege 15 secret 9 $9$RoLFysQ6bgXFPn$rtrhKp31Mc9cOH9Bunu5/ihgYp9DOS6GxoGdtculIfw
+username eitan autocommand show ip route
+username admin privilege 15 secret 9 $14$n/AE$hOiHSX9uGfXe/U$3he4hxsvnKgrWFQgs14InC2Guh.Rd1WdZjRqWLbsx8U
+!
+vlan internal allocation policy ascending
+no cdp run
+!
+!
+!
+!
+!
+interface Loopback0
+ description Loopback for SSH Managemnet, made by ansible
+ ip address 3.3.3.3 255.255.255.255
+!
+interface Ethernet0/0
+ switchport access vlan 10
+ switchport mode access
+!
+interface Ethernet0/1
+ description Uplink to Collapsed_Core D2.EITAN.COM, made by ansible
+ no switchport
+ ip address 192.168.1.26 255.255.255.252
+ ip ospf message-digest-key 1 md5 ld2m1olmd1p
+ ip ospf network point-to-point
+!
+interface Ethernet0/2
+ description Uplink to Collapsed_Core D1.EITAN.COM, made by ansible
+ no switchport
+ ip address 192.168.1.34 255.255.255.252
+ ip ospf message-digest-key 1 md5 ld2m1olmd1p
+ ip ospf network point-to-point
+!
+interface Ethernet0/3
+!
+interface Ethernet1/0
+!
+interface Ethernet1/1
+!
+interface Ethernet1/2
+!
+interface Ethernet1/3
+!
+interface Ethernet2/0
+!
+interface Ethernet2/1
+!
+interface Ethernet2/2
+!
+interface Ethernet2/3
+!
+interface Ethernet3/0
+!
+interface Ethernet3/1
+!
+interface Ethernet3/2
+!
+interface Ethernet3/3
+!
+interface Ethernet4/0
+!
+interface Ethernet4/1
+!
+interface Ethernet4/2
+!
+interface Ethernet4/3
+!
+interface Ethernet5/0
+!
+interface Ethernet5/1
+!
+interface Ethernet5/2
+!
+interface Ethernet5/3
+!
+interface Ethernet6/0
+!
+interface Ethernet6/1
+!
+interface Ethernet6/2
+!
+interface Ethernet6/3
+!
+interface Vlan1
+ no ip address
+ shutdown
+!
+interface Vlan10
+ description SVI for vlan 20 , made by ansible
+ ip address 10.0.10.1 255.255.255.240
+ shutdown
+!
+router ospf 1
+ router-id 3.3.3.3
+ auto-cost reference-bandwidth 1000
+ area 0 authentication message-digest
+ passive-interface Vlan10
+ network 3.3.3.3 0.0.0.0 area 0
+ network 10.0.10.0 0.0.0.15 area 0
+ network 192.168.1.24 0.0.0.3 area 0
+ network 192.168.1.32 0.0.0.3 area 0
+ maximum-paths 1
+!
+ip forward-protocol nd
+ip forward-protocol udp
+!
+!
+ip tcp synwait-time 5
+ip http server
+ip http secure-server
+ip ssh bulk-mode 131072
+ip ssh server algorithm encryption aes128-ctr aes192-ctr aes256-ctr
+ip ssh client algorithm encryption aes128-ctr aes192-ctr aes256-ctr
+!
+no logging btrace
+!
+!
+!
+!
+!
+control-plane
+!
+!
+!
+line con 0
+ exec-timeout 0 0
+ privilege level 15
+ logging synchronous
+line aux 0
+ exec-timeout 0 0
+ privilege level 15
+ logging synchronous
+line vty 0 4
+ transport input ssh
+!
+!
+end

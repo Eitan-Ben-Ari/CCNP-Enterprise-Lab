@@ -1,0 +1,72 @@
+{% if bgp is defined %}
+
+ip as-path access-list 1 deny _200_
+ip as-path access-list 1 permit .*
+
+
+{% if inventory_hostname != 'R4.EITAN.COM' %}
+route-map FILTER_INTERNET_FROM_HUB
+ match as-path 1
+{% else %}
+route-map FILTER_INTERNET_FROM_SPOKES
+ match as-path 1
+{% endif %}
+
+
+router bgp {{ bgp.asn }}
+ bgp router-id {{ bgp.router_id }}
+ bgp log-neighbor-changes
+
+{% for afi in bgp.vrf %}
+ address-family ipv4 vrf {{ afi.name }}
+
+{% if afi.networks is defined %}
+{% for network in afi.networks %}
+  network {{ network }}
+{% endfor %}
+{% endif %}
+
+{% if afi.summary_networks is defined%}
+{% for network in afi.summary_networks %}
+ aggregate-address {{network}} summary-only
+{% endfor%}
+{% endif %}
+
+
+{% if afi.redistribute is defined and afi.redistribute %}
+  redistribute {{ afi.redistribute }}
+{% endif %}
+
+{% for neighbor in afi.neighbors %}
+  neighbor {{ neighbor.ip }} remote-as {{ neighbor.remote_as }}
+
+{% if inventory_hostname != 'R4.EITAN.COM' %}
+  neighbor {{ neighbor.ip }} route-map FILTER_INTERNET_FROM_HUB out
+{% else %}
+  neighbor {{ neighbor.ip }} route-map FILTER_INTERNET_FROM_SPOKES out
+{% endif %}
+
+{% if neighbor.ebgp_multihop is defined %}
+  neighbor {{ neighbor.ip }} ebgp-multihop {{ neighbor.ebgp_multihop }}
+{% endif %}
+
+{% if neighbor.source is defined %}
+  neighbor {{ neighbor.ip }} update-source {{ neighbor.source }}
+{% endif %}
+
+{% if neighbor.local_as is defined %}
+  neighbor {{ neighbor.ip }} local-as {{ neighbor.local_as }}
+{% endif %}
+
+{% if neighbor.allowas is defined and neighbor.allowas %}
+  neighbor {{ neighbor.ip }} allowas-in
+{% endif %}
+
+{% if neighbor.activate is defined and neighbor.activate %}
+  neighbor {{ neighbor.ip }} activate
+{% endif %}
+
+{% endfor %}
+ exit-address-family
+{% endfor %}
+{% endif %}

@@ -1,0 +1,27 @@
+- name: aaa_timeout
+  hosts: D6.EITAN.COM
+  gather_facts: False
+  connection: network_cli
+  tasks:
+    - name: radius_timeout
+      cisco.ios.ios_config:
+        lines:
+          - timeout 3
+        parents:
+          - radius server win
+        save_when: always
+
+
+    - name: tacacs_timeout
+      cisco.ios.ios_config:
+        lines:
+          - timeout 3
+        parents:           # the commands that come before the actual command
+          - tacacs server Tacacs+
+        save_when: always  #saves the running-config no matter if a confiugration changed was made
+          
+          
+
+    
+
+  

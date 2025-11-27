@@ -1,0 +1,19 @@
+- name: automate enterprise
+  hosts: Edges
+  connection: network_cli
+  gather_facts: False
+
+  roles:
+    - crypto
+    - l3_interfaces
+    - ospf_role
+    - bgp
+    - nat
+    - QOS
+    - L2 & VTY
+
+- import_playbook: small_tasks/banner_motd.yml
+
+   
+  
+

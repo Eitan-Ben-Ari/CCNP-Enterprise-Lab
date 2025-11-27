@@ -1,0 +1,67 @@
+{% if ospf_ipv4 is defined%}
+{% for process in ospf_ipv4 %}
+
+{% if process.vrf is defined %}
+router ospf {{process.process_id}} vrf {{process.vrf}}
+{% else %}
+router ospf {{process.process_id}}
+{% endif %}
+
+{% if process.router_id is defined %}
+ router-id {{process.router_id}}
+{% endif %}
+
+ auto-cost reference-bandwidth 1000
+
+{% for area in process.areas %}
+
+{% if area.authentication is defined and area.authentication %}
+ area {{area.name}} authentication message-digest
+{% endif %}
+
+{% for network in area.networks %}
+ network {{network.ip}} {{network.wildcard}} area {{area.name}}
+{% endfor %}
+
+{% if area.passive_interface is defined %}
+{% for interface in area.passive_interface %}
+ passive-interface {{ interface }}
+
+{% endfor %}
+{% endif %}
+
+{% if area.default_originate is defined %}
+ default-information originate always metric {{area.default_originate.metric}}
+{% endif %}
+
+{% if area.p2p_interfaces is defined %}
+{% for interface in area.p2p_interfaces %}
+interface {{interface.name}}
+ ip ospf network point-to-point
+
+{% if interface.cost is defined %}
+ ip ospf cost {{ interface.cost }}
+{% endif %}
+
+{% if inventory_hostname in groups['site1'] %}
+ ip ospf message-digest-key 1 md5 {{ospf_shared_keys.site_1}}
+{% else %}
+ ip ospf message-digest-key 1 md5 {{ospf_shared_keys.site_2}}
+{% endif %}
+
+{% endfor %}
+{% endif  %}
+
+
+
+{% endfor %}
+
+
+{% endfor %}
+{% endif%}
+
+
+
+
+
+

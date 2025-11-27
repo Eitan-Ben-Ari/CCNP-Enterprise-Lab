@@ -1,0 +1,19 @@
+---
+- name: Deploy MOTD banner 
+  hosts: Edges
+  gather_facts: false
+
+  tasks:
+    - name: Push MOTD banner
+      cisco.ios.ios_banner:
+        banner: motd
+        multiline_delimiter: '{'
+        text: |
+          "{{ lookup('template', '../../banners/banner_motd.txt') }}"
+        state: present
+      register: banner_result
+
+    - name: Banner status
+      ansible.builtin.debug:
+        msg: "MOTD banner {{ 'updated' if banner_result.changed else 'already correct' }}"
+    

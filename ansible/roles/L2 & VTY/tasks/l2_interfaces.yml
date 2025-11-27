@@ -1,0 +1,32 @@
+---
+
+- name: configure trunk interfaces
+  cisco.ios.ios_l2_interfaces:
+    config: 
+    - name: "{{item['name']}}"
+      mode: trunk
+      trunk: 
+        allowed_vlans: "{{item['allowed_vlans']}}"
+        native_vlan: "{{item['native_vlan']}}"
+        encapsulation:  dot1q
+  loop: "{{L2['trunk_interfaces']}}"
+  when: L2['trunk_interfaces'] is defined
+
+- name: issue no negotiate
+  cisco.ios.ios_config:
+    lines:
+      - switchport nonegotiate  
+    parents: interface {{ item['name'] }}
+  loop: "{{ L2['trunk_interfaces'] }}"
+  when: L2['trunk_interfaces'] is defined
+
+- name: configure access interfaces
+  cisco.ios.ios_l2_interfaces:
+    config: 
+    - name: "{{item['name']}}"
+      mode: access
+      access: 
+        vlan: "{{item['vlan']}}"
+  loop: "{{L2['access_interfaces']}}"
+  when: L2['access_interfaces'] is defined
+

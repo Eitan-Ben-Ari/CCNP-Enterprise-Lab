@@ -1,0 +1,306 @@
+Building configuration...
+
+Current configuration : 7477 bytes
+!
+! Last configuration change at 14:54:36 ISRAEL Tue Aug 5 2025 by admin
+!
+version 17.16
+service timestamps debug datetime msec
+service timestamps log datetime msec
+service compress-config
+!
+hostname D7
+!
+boot-start-marker
+boot-end-marker
+!
+shell processing full
+!
+logging discriminator EXCESS severity drops 6 msg-body drops EXCESSCOLL 
+logging buffered 50000
+logging console discriminator EXCESS
+aaa new-model
+!
+!
+aaa authentication login default group radius local
+aaa authorization exec default group radius local 
+!
+!
+aaa session-id common
+!
+!
+!
+clock timezone ISL 2 0
+clock summer-time ISRAEL recurring last Fri Mar 2:00 last Sun Oct 2:00
+no ip icmp rate-limit unreachable
+!
+!
+!
+!
+!
+!
+!
+!
+ip dhcp pool VLAN_10
+ network 10.0.10.16 255.255.255.240
+ default-router 10.0.10.19 
+!
+!
+!
+ip audit notify log
+ip audit po max-events 100
+ip name-server 192.168.183.4
+no ip domain lookup
+ip domain name itlab
+ip cef
+login on-success log
+ipv6 unicast-routing
+no ipv6 cef
+!
+!
+!
+!
+!
+!
+!
+!
+key chain HSRP
+ key 1
+  key-string myhsrpmd5password
+  accept-lifetime local 15:00:00 May 10 2025 15:00:00 May 10 2026
+  send-lifetime local 15:00:00 May 10 2025 15:00:00 May 10 2026
+  cryptographic-algorithm md5
+key chain HSRP_2
+ key 1
+  key-string myhsrpmd5password2
+  accept-lifetime local 15:00:00 May 10 2025 15:00:00 May 10 2026
+  send-lifetime local 15:00:00 May 10 2025 15:00:00 May 10 2026
+  cryptographic-algorithm md5
+!
+crypto pki trustpoint TP-self-signed-2048006
+ enrollment selfsigned
+ subject-name cn=IOS-Self-Signed-Certificate-2048006
+ revocation-check none
+ rsakeypair TP-self-signed-2048006
+ hash sha512
+!
+!
+crypto pki certificate chain TP-self-signed-2048006
+ certificate self-signed 01
+  3082032A 30820212 A0030201 02020101 300D0609 2A864886 F70D0101 0D050030 
+  2E312C30 2A060355 04030C23 494F532D 53656C66 2D536967 6E65642D 43657274 
+  69666963 6174652D 32303438 30303630 1E170D32 35303830 32313734 3533325A 
+  170D3335 30383032 31373435 33325A30 2E312C30 2A060355 04030C23 494F532D 
+  53656C66 2D536967 6E65642D 43657274 69666963 6174652D 32303438 30303630 
+  82012230 0D06092A 864886F7 0D010101 05000382 010F0030 82010A02 82010100 
+  9615579C CCF2C94F C758CBB7 2F51C0EF 0063901D DD884277 A66BC1F0 EBEEB110 
+  DBDCB4D6 AA84C2B0 391BE404 E689B070 6E5C0E14 DDA1F285 725CFB36 C0FE4935 
+  86653D56 40895DE8 045FF5DA E53EED94 2B71E4E5 347B56E2 F801EF1C 89140335 
+  39128E83 59944775 33E7C511 A04AD84D AE12BAF9 B0DC6928 014CCFDB B164D285 
+  FE284CD0 5E62C662 491FEB28 0892893C 2AD71009 65F518A7 685754F9 7141D07C 
+  15AF79ED 65E950AD 26CE1BB5 7E74C107 2B3ACC9D F7C39406 23724049 D13665D3 
+  45298A5A D5CE83F9 44273DF9 D1BFA270 34D6008D A5EE19C0 349F5FF4 0096B4F0 
+  76BADD26 02DE82A7 40F2B71F F2962C91 488F7422 783ED621 964F29BD 5EB54A79 
+  02030100 01A35330 51301D06 03551D0E 04160414 2F3B65FA DAF5BEF6 53F9BF37 
+  A5F99FB0 070DFDB0 301F0603 551D2304 18301680 142F3B65 FADAF5BE F653F9BF 
+  37A5F99F B0070DFD B0300F06 03551D13 0101FF04 05300301 01FF300D 06092A86 
+  4886F70D 01010D05 00038201 01004AB0 1943CE97 AD9C9AFE 67B4A966 B7A84F3B 
+  159D6948 06D5A124 6ADE5ABD 7F042CC4 D5A9E2FE D9E81D5F 973A7A07 36F03FA2 
+  6970F5A6 CC25FE10 D4155FC1 D8A56361 20CAE51E 3C9C7352 73D87987 176E477A 
+  89BA0585 A043A5A1 D63F853C 633FB874 D48D6B29 13B25F9A D822A6F8 DCD48DE3 
+  0311300E 2B1EBD77 E0D292DE F7D80DBB 1BB828CC BC27E4DD 49EAD2A5 E1508171 
+  0794BFC3 EFFBE059 08D24583 A553F71D AAEDADA3 4B4FEC51 57403651 F93E0535 
+  27EB321E 896AFBB8 4E0793D6 2453255D 14FCA384 0BC205C5 34DA9711 4F28D321 
+  8BBDB436 D792D461 093C28EC A5C279D3 AE2FAC2E 99F71939 C11492C6 D851D954 
+  1662D2B3 FA86D738 F39372D1 5C2E
+  	quit
+!
+!
+memory free low-watermark processor 53283
+!
+!
+spanning-tree mode rapid-pvst
+spanning-tree extend system-id
+spanning-tree vlan 10 priority 28672
+spanning-tree vlan 20 priority 24576
+!
+!
+username admin privilege 15 secret 9 $14$zje.$gbOwotkgsu9XV.$AU4XOvFOFebm4bWKyPXItPq95WeWITWoG9isUw1Idpg
+!
+vlan internal allocation policy ascending
+no cdp run
+!
+!
+!
+!
+!
+interface Loopback0
+ description Loopback for SSH Managemnet, made by ansible :)
+ ip address 7.7.7.7 255.255.255.255
+!
+interface Port-channel1
+ switchport trunk encapsulation dot1q
+ switchport trunk native vlan 999
+ switchport trunk allowed vlan 10,20,30
+ switchport mode trunk
+ switchport nonegotiate
+!
+interface Ethernet0/0
+ description Uplink to Edge Router R2.EITAN.COM, made by ansible :)
+ no switchport
+ ip address 192.168.2.9 255.255.255.252
+ ip ospf message-digest-key 1 md5 kjado2jo1ndd1
+ ip ospf network point-to-point
+!
+interface Ethernet0/1
+ switchport trunk encapsulation dot1q
+ switchport trunk native vlan 999
+ switchport trunk allowed vlan 10,20,30
+ switchport mode trunk
+ switchport nonegotiate
+ channel-group 1 mode passive
+!
+interface Ethernet0/2
+ switchport trunk encapsulation dot1q
+ switchport trunk native vlan 999
+ switchport trunk allowed vlan 10,20,30
+ switchport mode trunk
+ switchport nonegotiate
+ channel-group 1 mode passive
+!
+interface Ethernet0/3
+ switchport trunk encapsulation dot1q
+ switchport trunk native vlan 999
+ switchport trunk allowed vlan 10,20
+ switchport mode trunk
+ switchport nonegotiate
+!
+interface Ethernet1/0
+ switchport trunk encapsulation dot1q
+ switchport trunk native vlan 999
+ switchport trunk allowed vlan 10,20
+ switchport mode trunk
+ switchport nonegotiate
+!
+interface Ethernet1/1
+ description Uplink to Edge Router R6.EITAN.COM, made by ansible :)
+ no switchport
+ ip address 192.168.2.6 255.255.255.252
+ ip ospf message-digest-key 1 md5 kjado2jo1ndd1
+ ip ospf network point-to-point
+!
+interface Ethernet1/2
+!
+interface Ethernet1/3
+!
+interface Ethernet2/0
+!
+interface Ethernet2/1
+!
+interface Ethernet2/2
+!
+interface Ethernet2/3
+!
+interface Ethernet3/0
+!
+interface Ethernet3/1
+!
+interface Ethernet3/2
+!
+interface Ethernet3/3
+!
+interface Ethernet4/0
+!
+interface Ethernet4/1
+!
+interface Ethernet4/2
+!
+interface Ethernet4/3
+!
+interface Ethernet5/0
+!
+interface Ethernet5/1
+!
+interface Ethernet5/2
+!
+interface Ethernet5/3
+!
+interface Ethernet6/0
+!
+interface Ethernet6/1
+!
+interface Ethernet6/2
+!
+interface Ethernet6/3
+!
+interface Vlan1
+ no ip address
+ shutdown
+!
+interface Vlan10
+ description SVI for vlan 10, made by ansible :)
+ ip address 10.0.10.17 255.255.255.240
+ standby version 2
+ standby 10 ip 10.0.10.19
+ standby 10 priority 80
+ standby 10 preempt
+ standby 10 authentication md5 key-chain HSRP
+!
+interface Vlan20
+ description SVI for vlan 20 , made by ansible :)
+ ip address 10.0.20.10 255.255.255.248
+ standby version 2
+ standby 20 ip 10.0.20.11
+ standby 20 priority 120
+ standby 20 preempt
+ standby 20 authentication md5 key-chain HSRP_2
+!
+router ospf 1
+ router-id 7.7.7.7
+ auto-cost reference-bandwidth 1000
+ area 0 authentication message-digest
+ passive-interface Vlan10
+ passive-interface Vlan20
+ network 7.7.7.7 0.0.0.0 area 0
+ network 10.0.10.16 0.0.0.15 area 0
+ network 10.0.20.8 0.0.0.7 area 0
+ network 192.168.2.4 0.0.0.3 area 0
+ network 192.168.2.8 0.0.0.3 area 0
+ network 192.168.183.0 0.0.0.255 area 0
+!
+ip forward-protocol nd
+ip forward-protocol udp
+!
+!
+ip tcp synwait-time 5
+ip http server
+ip http secure-server
+ip ssh bulk-mode 131072
+ip ssh server algorithm encryption aes128-ctr aes192-ctr aes256-ctr
+ip ssh client algorithm encryption aes128-ctr aes192-ctr aes256-ctr
+!
+no logging btrace
+!
+tacacs server Tacacs+
+ timeout 3
+!
+!
+!
+!
+control-plane
+!
+!
+!
+line con 0
+ exec-timeout 0 0
+ privilege level 15
+ logging synchronous
+line aux 0
+ exec-timeout 0 0
+ privilege level 15
+ logging synchronous
+line vty 0 4
+ transport input ssh
+!
+!
+end

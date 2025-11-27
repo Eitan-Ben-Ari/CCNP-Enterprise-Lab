@@ -1,0 +1,21 @@
+{% if Outbound_QOS is defined %}
+policy-map marking
+  {% for class in Outbound_QOS.classes %}
+  class {{class.name}}
+    {% if class.marking and class.marking is string %}
+    set dscp {{class.marking}}
+    {% else %}
+    set dscp {{class.marking[0]}}
+    {% endif %}
+  {% endfor %}
+{% endif %}
+
+{% if qos_private.lan_interfaces is defined and qos_private.lan_interfaces is not string %}
+{% for interface in qos_private.lan_interfaces %}
+interface {{interface}}
+  service-policy input marking
+{% endfor %}
+{% else %}
+interface {{qos_private.lan_interfaces}}
+  service-policy input marking
+{% endif %}

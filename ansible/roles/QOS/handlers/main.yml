@@ -1,0 +1,18 @@
+#SPDX-License-Identifier: MIT-0
+---
+# handlers file for QOS
+
+- name: show outbound-qos wan 
+  debug:
+    msg: "{{outbound_wan_qos.commands}}"
+  listen: outbound_qos
+
+- name: show inbound-qos wan 
+  debug:
+    msg: "{{inbound_wan_qos.commands}}"
+  listen: in-wan-qos
+
+- name: show outbound-qos wan 
+  debug:
+    msg: "{{inbound_marking.commands}}"
+  listen: inbound_qos_marking

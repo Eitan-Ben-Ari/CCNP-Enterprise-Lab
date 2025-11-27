@@ -1,0 +1,18 @@
+---
+
+  - name: push ACL to identify inside-local addresses for NAT
+    cisco.ios.ios_acls:
+      config:
+      - afi: ipv4
+        acls:
+          - name: NAT-IN-LOCAL
+            acl_type: standard
+            aces:
+            - grant: permit
+              source:
+                address: "{{item | ansible.netcommon.ipaddr('network')}}"
+                wildcard_bits: "{{item | ansible.netcommon.ipaddr('wildcard')}}"
+    loop: "{{ nat['nat_range'] }}"
+    when: nat is defined
+
+
