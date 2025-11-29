@@ -1,0 +1,2 @@
+pip install "ansible-core==2.18.5"
+ansible-galaxy collection install cisco.ios:9.2.0 ansible.netcommon:7.2.0 --force
