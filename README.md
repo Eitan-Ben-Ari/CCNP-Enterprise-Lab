@@ -3,7 +3,7 @@
 
 9 × CSR1000v (IOS-XE 17.3) | GNS3 | Dual-VRF 
 
-![Lab Topology](images/topology.png)
+![Lab Topology](images/topology.jpg)
 
 ## Design Highlights
 - Dual-VRF architecture (`site_1` / `site_1_2` overlay + `underlay`)
