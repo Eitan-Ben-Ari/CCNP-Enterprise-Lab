@@ -25,9 +25,11 @@ Everything in the overlay vrf on Edges is deployed by Ansible
 | BGP overlay peers             | `roles/bgp` → `neighbor.j2`                      | Yes       |
 | VRF-aware PAT                 | `source_list.yml`  `PAT.j2`                      | Yes       |
 | BGP overlay peers             | `roles/bgp` → `neighbor.j2`                      | Yes       |
-| QOS, 3 service-policies       | `roles/QOS`  → `access_group.yml` `inter_marking.j2` `wan_inbound.j2` `wan_outbound.j2`       | YES        |
-| Vlans, L2 interfaces, LACP    | `roles/L2 & VTY`  →  `vlans.yml` `l2_interfaces.yml`  `lag.yml`  | –         |
+| QOS, 3 service-policies       | `roles/QOS`  → `access_group.yml` `inter_marking.j2` `wan_inbound.j2` `wan_outbound.j2`       | YES    
+| Vlans, L2 interfaces, LACP  | `roles/L2 & VTY`  →  `vlans.yml` `l2_interfaces.yml`  `lag.yml`  | –         |
 | L2 Security(port-sec, dhcp-snooping, DIA, STP)| `roles/L2 & VTY`  →  `l2_security.j2`  | YES    |
+| HSRP | `roles/L2 & VTY`  →  `hsrp_stp.j2`  | YES    |
+
 
 
 
