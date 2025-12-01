@@ -1,27 +1,29 @@
 - name: removing configuration...
-  hosts: Edges
+  hosts: Switches
   gather_facts: False
   tasks:
-  - name: erase policy-maps before provisioning 1 :)))))
+  - name: erase policy-maps before provisioning  :)))))
     cisco.ios.ios_config:
       lines:
 
         - no policy-map {{item}}
     loop: "{{policy_maps}}"  
     register: commands1
+    when: "'Edges' in group_names"
 
     
-  - name: erase class-maps before provisioning 2  :)))))
+  - name: erase class-maps before provisioning   :)))))
     cisco.ios.ios_config:
       lines:
 
         - no class-map {{item}}
     loop: "{{class_maps}}"
     register: commands2
+    when: "'Edges' in group_names"
 
         
 
-  - name: erase ACLS before provisioning 3 :)))))
+  - name: erase ACLS before provisioning  :)))))
     cisco.ios.ios_config:
       lines:
 
@@ -30,9 +32,11 @@
 
     loop: "{{extended_acls}}"
     register: commands3
+    when: "'Edges' in group_names"
 
 
-  - name: erase ospf before provisioning 4  :)))))
+
+  - name: erase ospf before provisioning   :)))))
     cisco.ios.ios_config:
       lines:
 
@@ -40,7 +44,7 @@
         
     loop: "{{ospf_processes}}"
     tags: [one]
-    register: commands
+    when: "'Edges' in group_names"
   
 
 
@@ -50,11 +54,24 @@
         - interface tunnel 1
         - exit
         - default interface tunnel 1
-        
+    when: "'Edges' in group_names"
+
+  - name: erase leaking route-map on hub  :)))))
+    cisco.ios.ios_config:
+      lines:
+        - no route-map FILTER_INTERNET_FROM_SPOKES
+    when: inventory_hostname == "R4.EITAN.COM"
+  - name: erase leaking route-map on hub  :)))))
+    cisco.ios.ios_config:
+      lines:
+        - no route-map FILTER_INTERNET_FROM_HUB
+    when: 
+      - inventory_hostname != "R4.EITAN.COM"
+      - "'Edges' in group_names"
         
   
 
-  - name: erase ipsec profile/policy/keyring/transform_set  & IKEv2 before provisioning 5 :)))))
+  - name: erase ipsec  & IKEv2 before provisioning  :)))))
     cisco.ios.ios_config:
       lines:
         - crypto ipsec profile IKEV2_IPSEC_PROFILE
@@ -69,9 +86,10 @@
         - no crypto ikev2 keyring IKEV2_KEYRING 
         - no crypto ipsec transform-set IKEV2_TRANSFORM_SET esp-aes 256 esp-sha256-hmac
         - no crypto ikev2 proposal IKEV2_PROPOSAL 
+    when: "'Edges' in group_names"
         
 
-  - name: erase overlay BGP before provisioning 6  :)))))
+  - name: erase overlay BGP before provisioning   :)))))
     cisco.ios.ios_config:
       lines:
 
@@ -79,7 +97,7 @@
       parents: 
         - router bgp {{ bgp.asn }}
   
-  - name: erase PAT interfaces commands before provisioning 7  :)))))
+  - name: erase PAT interfaces commands before provisioning   :)))))
     cisco.ios.ios_config:
       lines:
 
@@ -93,7 +111,7 @@
     tags: [three]
 
   
-  - name: erase PAT interfaces commands before provisioning 9  :)))))
+  - name: erase PAT interfaces commands before provisioning   :)))))
     cisco.ios.ios_config:
       lines:
 
@@ -104,7 +122,7 @@
       - "'hub' not in group_names"
       - "'Edges' in group_names"
   
-  - name: erase PAT interfaces commands before provisioning 10  :)))))
+  - name: erase PAT interfaces commands before provisioning   :)))))
     cisco.ios.ios_config:
       lines:
 
@@ -113,14 +131,24 @@
     when: 
       - "'hub' not in group_names"
       - "'Edges' in group_names"
-  - name: erase VTY-line configuration before provisioning 11  :)))))
+      
+  - name: erase Edges VTY-line configuration before provisioning   :)))))
     cisco.ios.ios_config:
       lines:
         - no ip access-list standard SSH_MGMT
         - line vty {{SSH_MGMT.lines}} 
         - no access-class SSH_MGMT in vrfname {{SSH_MGMT.vrf}}
+    when: "'Edges' in group_names and inventory_hostname != 'R4.EITAN.COM'"
 
-  - name: erase all interfaces apart from WAN 12 :)))))
+  - name: erase Edges NAT-IN-LOCAL ACL before provisioning   :)))))
+    cisco.ios.ios_config:
+      lines:
+        - no ip access-list standard NAT-IN-LOCAL
+    when: 
+      - "'hub' not in group_names"
+      - "'Edges' in group_names"
+
+  - name: erase Lan interface configuration on Spokes  :)))))
     cisco.ios.ios_config:
       lines:
         - default interface {{qos_private.lan_interfaces[0]}}
@@ -130,14 +158,32 @@
       - "'hub' not in group_names"
     tags: [four]
    
-  - name: erase all interfaces apart from WAN 13 :)))))
+  - name: erase loopbacks on spokes  :)))))
     cisco.ios.ios_config:
       lines:
         - interface loopback 0
         - interface loopback 1
+        - interface loopback 2
         - no interface loopback 0
         - no interface loopback 1
+        - no interface loopback 2
+    when: 
+      - "'Edges' in group_names"
+      - "'hub' not in group_names"
+    tags: [five] 
 
-   
-        
-   
+  - name: erase Loopbacks on hub  :)))))
+    cisco.ios.ios_config:
+      lines:
+        - interface loopback 1
+        - interface loopback 2
+        - no interface loopback 1
+        - no interface loopback 2
+    when: inventory_hostname == "R4.EITAN.COM"
+    tags: [six]
+
+
+  - name: erase Banner :)))))
+    cisco.ios.ios_config:
+      lines:
+        - no banner motd
