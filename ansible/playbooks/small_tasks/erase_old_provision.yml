@@ -1,5 +1,5 @@
 - name: removing configuration...
-  hosts: Switches
+  hosts: Edges
   gather_facts: False
   tasks:
   - name: erase policy-maps before provisioning  :)))))
