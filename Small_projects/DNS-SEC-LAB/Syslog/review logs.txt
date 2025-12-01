@@ -1,0 +1,9 @@
+cisco@inserthostname-here:~/ansible$ cd /var/log/remote_logs/
+cisco@inserthostname-here:/var/log/remote_logs$ ls
+127.0.0.1
+cisco@inserthostname-here:/var/log/remote_logs$ ls
+127.0.0.1  192.168.68.222
+cisco@inserthostname-here:/var/log/remote_logs$ cat 192.168.68.222/syslog.log
+2025-01-19T14:47:51.775820+00:00 192.168.68.222 189: *Jan 19 14:47:50.776: %LINK-5-CHANGED: Interface Ethernet0/1, changed state to administratively down
+2025-01-19T14:47:51.775820+00:00 192.168.68.222 190: *Jan 19 14:47:51.777: %LINEPROTO-5-UPDOWN: Line protocol on Interface Ethernet0/1, changed state to down
+cisco@inserthostname-here:/var/log/remote_logs$

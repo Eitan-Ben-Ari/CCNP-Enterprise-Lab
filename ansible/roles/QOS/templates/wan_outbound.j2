@@ -1,0 +1,52 @@
+{% if Outbound_QOS is defined %}
+
+{% for class in Outbound_QOS.classes %}
+class-map match-any {{ class.name }}
+{% if class.marking and class.marking is string %}
+ match dscp {{ class.marking }}
+{% elif class.marking and class.marking is not string %}
+ match dscp {{ class.marking | join(' ') }}
+{% endif %}
+{% if class.acl is defined %}
+ match access-group name {{ class.acl }}
+{% endif %}
+{% if class.protocols is defined %}
+{% for protocol in class.protocols %}
+ match protocol {{ protocol }}
+{% endfor %}
+{% endif %}
+{% if class.applications is defined%}
+{% for application in class.applications %}
+ match application {{ application }}
+{% endfor %}
+{% endif %}
+{% endfor %}
+
+
+policy-map OUT-CHILD
+{% for class in Outbound_QOS.classes %}
+ class {{ class.name }}
+ {% if class.priority is defined %}
+  priority {{ class.priority }}
+ {% elif class.bandwidth_percent is defined %}
+  bandwidth percent {{ class.bandwidth_percent }}
+ {% endif %}
+ {% if class.police is defined %}
+  police rate percent {{class.police.rate}}
+ {% endif %}
+ 
+{% endfor %}
+ class class-default
+  fair-queue
+  random-detect dscp-based
+  random-detect ecn
+
+policy-map FATHER
+ class class-default
+  shape average 800000000
+  service-policy OUT-CHILD
+
+interface {{ qos_private.wan_interface }}
+ service-policy output FATHER
+
+{% endif %}

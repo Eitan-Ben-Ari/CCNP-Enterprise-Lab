@@ -1,0 +1,16 @@
+- name: Backup router and switch configurations
+  hosts: Routers
+  connection: network_cli
+  gather_facts: no
+
+  tasks:
+    - name: Backup Router Configuration
+      ios_command:
+        commands:
+          - show running-config
+      register: router_config
+
+    - name: Save Router Config to Local File
+      copy:
+        content: "{{ router_config.stdout[0] }}"
+        dest: "~/ansible/running-config/{{ inventory_hostname }}.txt"

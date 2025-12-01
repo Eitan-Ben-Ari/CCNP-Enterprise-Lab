@@ -1,0 +1,40 @@
+#SPDX-License-Identifier: MIT-0
+---
+# tasks file for QOS
+- name: push acls
+  include_tasks: access-group.yml
+  tags: [one]
+  register: qos_acl
+  when: inventory_hostname in groups['Edges']
+
+
+- name: push Outbound-QOS WAN configuration
+  cisco.ios.ios_config:
+    src: wan_outbound.j2
+  tags: [two]
+  register: outbound_wan_qos
+  notify: outbound_qos
+
+
+- name: push Inbound-QOS WAN configuration
+  cisco.ios.ios_config:
+    src: wan_inbound.j2
+  tags: [three]
+  register: inbound_wan_qos
+  notify: in-wan-qos
+
+
+
+- name: push marking configuration
+  cisco.ios.ios_config:
+    src: inter_marking.j2
+  tags: [four]
+  register: inbound_marking
+  notify: inbound_qos_marking
+
+
+
+
+# - name: push outbound.j2
+#   cisco.ios.ios_config:
+#     src: "neighbor.j2"

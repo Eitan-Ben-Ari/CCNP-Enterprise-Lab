@@ -1,0 +1,96 @@
+
+crypto:
+  ikev2:
+    policy:
+      - proposal:
+          name: IKEV2_PROPOSAL
+          enc: "aes-cbc-256"
+          hash: "sha256"
+          group: "14"
+    keyring:
+      name: IKEV2_KEYRING
+      peers: []  # Placeholder, populated by host_vars
+    profile:
+      name: IKEV2_PROFILE
+      authentication:
+        remote: pre-share
+        local: pre-share
+      keyring: IKEV2_KEYRING
+      dpd:
+        interval: 10
+        retry: 3
+        type: periodic
+  ipsec:
+    transform_set:
+      name: IKEV2_TRANSFORM_SET
+      enc: "esp-aes 256"
+      hash: "esp-sha256-hmac"  
+      mode: tunnel
+    profile:
+      name: IKEV2_IPSEC_PROFILE
+      transform_set: IKEV2_TRANSFORM_SET
+      ikev2_profile: IKEV2_PROFILE
+
+
+tunnels_vars:
+  - tunnel: "tunnel 1"
+    description: multipoint GRE DMVPN , made by ansible
+    mask: "255.255.255.0"
+    mode: "gre multipoint"
+    source_interface: "loopback1"
+    mtu: "1400"
+    mss: "1360"
+    ospf_net_type: "point-to-multipoint"
+    underlay_vrf: "underlay"
+    shared_key: "hjdi21od"
+    nhrp_net_id: "1"
+  
+
+
+Outbound_QOS:
+  classes:
+    - name: NETWORK-CONTROL
+      marking: cs6
+      acl: CONTROL_ACL
+      priority: percent 10
+      applications: []
+      protocols: []
+      
+    - name: VOICE
+      marking: ef
+      acl: VOICE-ACL
+      priority: 50000
+      applications: [rtp, sip, voip]
+      protocols: []
+
+    - name: VIDEO
+      marking: [ af41, af42, af43]
+      priority: 70000
+      applications: [webex, zoom, teams]
+      protocols: []
+
+    - name: HTTPS-critical
+      marking: af31
+      applications: []
+      bandwidth_percent: 20
+      protocols: [salesforce, gmail, google-docs, slack, share-point]
+
+    - name: SCAVENGER
+      marking: cs1
+      applications: []
+      protocols: [youtube, netflix, spotify, Instagram, facebook, steam, android-updates]
+      police:
+        rate: 5
+    
+
+
+ # These variables are only used to quickly wipe policy-maps,
+ # class-maps, and ACLs before the demo
+
+class_maps: [ NETWORK-CONTROL, VIDEO, VOICE, SCAVENGER, HTTPS-critical]
+policy_maps: [OUT-CHILD, FATHER, INGRESS-WAN, marking] 
+extended_acls: [VOICE-ACL, CONTROL_ACL]
+ospf_processes: [1, 2]
+
+
+

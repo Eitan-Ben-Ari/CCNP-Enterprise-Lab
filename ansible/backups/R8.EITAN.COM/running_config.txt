@@ -1,0 +1,577 @@
+Building configuration...
+
+Current configuration : 16711 bytes
+!
+! Last configuration change at 19:35:23 UTC Sun Nov 30 2025 by admin
+!
+version 17.3
+service timestamps debug datetime msec
+service timestamps log datetime msec
+service call-home
+platform qfp utilization monitor load 80
+no platform punt-keepalive disable-kernel-core
+platform console serial
+!
+hostname R8
+!
+boot-start-marker
+boot-end-marker
+!
+shell processing full
+!
+!
+aaa new-model
+!
+!
+aaa authentication login default group radius local
+aaa authorization exec default group radius local 
+!
+!
+!
+!
+!
+!
+aaa session-id common
+no ip icmp rate-limit unreachable
+!
+ip vrf site_2
+ rd 64540:2
+ import map IMPORTING_DEFAULT
+ route-target import 64540:1
+!
+ip vrf underlay
+ rd 64540:1
+ route-target export 64540:1
+!
+!
+!
+!
+!
+!
+!
+no ip domain lookup
+ip domain name itlab
+!
+!
+!
+login on-success log
+ipv6 unicast-routing
+!
+!
+!
+!
+!
+!
+!
+subscriber templating
+! 
+! 
+! 
+! 
+!
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+!
+!
+cts logging verbose
+!
+!
+!
+!
+!
+!
+!
+!
+!
+crypto pki trustpoint TP-self-signed-223334041
+ enrollment selfsigned
+ subject-name cn=IOS-Self-Signed-Certificate-223334041
+ revocation-check none
+ rsakeypair TP-self-signed-223334041
+!
+crypto pki trustpoint SLA-TrustPoint
+ enrollment pkcs12
+ revocation-check crl
+!
+!
+crypto pki certificate chain TP-self-signed-223334041
+ certificate self-signed 01
+  3082032E 30820216 A0030201 02020101 300D0609 2A864886 F70D0101 05050030 
+  30312E30 2C060355 04031325 494F532D 53656C66 2D536967 6E65642D 43657274 
+  69666963 6174652D 32323333 33343034 31301E17 0D323530 37333131 32323631 
+  335A170D 33353037 33313132 32363133 5A303031 2E302C06 03550403 1325494F 
+  532D5365 6C662D53 69676E65 642D4365 72746966 69636174 652D3232 33333334 
+  30343130 82012230 0D06092A 864886F7 0D010101 05000382 010F0030 82010A02 
+  82010100 98FB17CA 9904A448 672194FF 2D4DF8CA D3C1D070 6AB85FC1 B8D01625 
+  7974F7AE AAAB86E4 7CF55F4C 065CE0BF A55AF2B4 90E8AFF0 5766A893 9A1DDF61 
+  B1E0BC8A 7BF9C0C1 FC4CDF82 0F574803 965133C4 1D9FB878 40A47CD3 CA2CCFC1 
+  A58BE1D7 614277B9 2E33B3F8 CDB1778D 68233A19 E4CB792D 0E006A83 C2E29F86 
+  A954E56F B60657BE 7496E7DE 237F3E21 A535E990 F1F4B3C5 4290A9EB AC4181E1 
+  523D80BC DF107461 4BE1DF21 372D1BDF BD96AF1F FBB88FA5 E688ECB1 CDD62342 
+  2269BF8A 2329E471 2B75BB9F 0873F196 60514C0E 52813CF9 B0983978 94B8CAE7 
+  91139F0D BD956DB5 BB5F86A4 85808404 5DD1FBC6 54A9AE99 74F8274C EBF044D0 
+  1DD6FF83 02030100 01A35330 51300F06 03551D13 0101FF04 05300301 01FF301F 
+  0603551D 23041830 1680149C 237228D4 38470C8A 46C04C32 2FA2418F 7BCDB230 
+  1D060355 1D0E0416 04149C23 7228D438 470C8A46 C04C322F A2418F7B CDB2300D 
+  06092A86 4886F70D 01010505 00038201 01007EDC 2A528575 E0FC19B3 00EA255F 
+  0681226D F8FB8070 09E6E5B0 B734588C E89DE795 CC94206F 1C4E7A65 53D90B02 
+  8CAC1AA2 6E8599F6 AE3E014A 7EEF8BB7 59EC6FEE 82B3B2AB 7C567C0E 8E8AB3BE 
+  FD1E4A85 583660CF AF2C83BB 93F28E00 91CFC663 3998C694 59A5F69D 2561359D 
+  AE996DA6 0EFEE09F C195C662 ADE62B10 DBA35397 E1DCF443 548CC5C8 3131591E 
+  E06A3184 DB914E61 166C4597 C52D3AAC 6142BA40 14915737 23015F2F 51DCCA88 
+  D069A093 CDC4CAC9 92BD7F6B 5C10E085 B292514F 955E810C 6319B26C 3DF7F180 
+  1221F49E BC7CB329 EB87EADA 5C940A14 89636AA0 660B845D A68E9BEC E1664674 
+  0E2B09FE 0FDC0FBF 3592BAB5 E046AAF4 5323
+  	quit
+crypto pki certificate chain SLA-TrustPoint
+ certificate ca 01
+  30820321 30820209 A0030201 02020101 300D0609 2A864886 F70D0101 0B050030 
+  32310E30 0C060355 040A1305 43697363 6F312030 1E060355 04031317 43697363 
+  6F204C69 63656E73 696E6720 526F6F74 20434130 1E170D31 33303533 30313934 
+  3834375A 170D3338 30353330 31393438 34375A30 32310E30 0C060355 040A1305 
+  43697363 6F312030 1E060355 04031317 43697363 6F204C69 63656E73 696E6720 
+  526F6F74 20434130 82012230 0D06092A 864886F7 0D010101 05000382 010F0030 
+  82010A02 82010100 A6BCBD96 131E05F7 145EA72C 2CD686E6 17222EA1 F1EFF64D 
+  CBB4C798 212AA147 C655D8D7 9471380D 8711441E 1AAF071A 9CAE6388 8A38E520 
+  1C394D78 462EF239 C659F715 B98C0A59 5BBB5CBD 0CFEBEA3 700A8BF7 D8F256EE 
+  4AA4E80D DB6FD1C9 60B1FD18 FFC69C96 6FA68957 A2617DE7 104FDC5F EA2956AC 
+  7390A3EB 2B5436AD C847A2C5 DAB553EB 69A9A535 58E9F3E3 C0BD23CF 58BD7188 
+  68E69491 20F320E7 948E71D7 AE3BCC84 F10684C7 4BC8E00F 539BA42B 42C68BB7 
+  C7479096 B4CB2D62 EA2F505D C7B062A4 6811D95B E8250FC4 5D5D5FB8 8F27D191 
+  C55F0D76 61F9A4CD 3D992327 A8BB03BD 4E6D7069 7CBADF8B DF5F4368 95135E44 
+  DFC7C6CF 04DD7FD1 02030100 01A34230 40300E06 03551D0F 0101FF04 04030201 
+  06300F06 03551D13 0101FF04 05300301 01FF301D 0603551D 0E041604 1449DC85 
+  4B3D31E5 1B3E6A17 606AF333 3D3B4C73 E8300D06 092A8648 86F70D01 010B0500 
+  03820101 00507F24 D3932A66 86025D9F E838AE5C 6D4DF6B0 49631C78 240DA905 
+  604EDCDE FF4FED2B 77FC460E CD636FDB DD44681E 3A5673AB 9093D3B1 6C9E3D8B 
+  D98987BF E40CBD9E 1AECA0C2 2189BB5C 8FA85686 CD98B646 5575B146 8DFC66A8 
+  467A3DF4 4D565700 6ADF0F0D CF835015 3C04FF7C 21E878AC 11BA9CD2 55A9232C 
+  7CA7B7E6 C1AF74F6 152E99B7 B1FCF9BB E973DE7F 5BDDEB86 C71E3B49 1765308B 
+  5FB0DA06 B92AFE7F 494E8A9E 07B85737 F3A58BE1 1A48A229 C37C1E69 39F08678 
+  80DDCD16 D6BACECA EEBC7CF9 8428787B 35202CDC 60E4616A B623CDBD 230E3AFB 
+  418616A9 4093E049 4D10AB75 27E86F73 932E35B5 8862FDAE 0275156F 719BB2F0 
+  D697DF7F 28
+  	quit
+!
+license udi pid CSR1000V sn 90HXE020OYS
+diagnostic bootup level minimal
+memory free low-watermark processor 71477
+!
+!
+spanning-tree extend system-id
+!
+username eitan privilege 15 secret 9 $9$RoLFysQ6bgXFPn$rtrhKp31Mc9cOH9Bunu5/ihgYp9DOS6GxoGdtculIfw
+username eitan autocommand show ip route
+username admin privilege 15 secret 9 $14$KJuh$T95wOkEIz2aVOk$vHzYx4QQZe2/H2e4ZJp6UQyV4ADkY7fTXTFlAYZITn6
+!
+redundancy
+!
+!
+crypto ikev2 proposal IKEV2_PROPOSAL 
+ encryption aes-cbc-256
+ integrity sha256
+ group 14
+!
+crypto ikev2 policy IKEV2_POLICY 
+ match fvrf any
+ proposal IKEV2_PROPOSAL
+!
+crypto ikev2 keyring IKEV2_KEYRING
+ peer R4
+  address 4.4.4.4
+  pre-shared-key mySecret48
+ !
+ peer R2
+  address 2.2.2.2
+  pre-shared-key mySecret28
+ !
+ peer R6
+  address 6.6.6.6
+  pre-shared-key mySecret68
+ !
+!
+!
+crypto ikev2 profile IKEV2_PROFILE
+ match fvrf any
+ match identity remote address 2.2.2.2 255.255.255.255 
+ match identity remote address 6.6.6.6 255.255.255.255 
+ match identity remote address 4.4.4.4 255.255.255.255 
+ identity local address 8.8.8.8
+ authentication remote pre-share
+ authentication local pre-share
+ keyring local IKEV2_KEYRING
+ dpd 10 3 periodic
+!
+!
+!
+!
+!
+class-map match-any NETWORK-CONTROL
+ match dscp cs6 
+ match access-group name CONTROL_ACL
+class-map match-any VIDEO
+ match dscp af41  af42  af43 
+ match application webex-meeting
+ match application zoom
+ match application teams
+class-map match-any VOICE
+ match dscp ef 
+ match access-group name VOICE-ACL
+ match application rtp
+ match application sip
+ match application voip
+class-map match-any SCAVENGER
+ match dscp cs1 
+ match protocol youtube
+ match protocol netflix
+ match protocol spotify
+ match protocol instagram
+ match protocol facebook
+ match protocol steam
+ match protocol android-updates
+class-map match-all check
+class-map match-any HTTPS-critical
+ match dscp af31 
+ match protocol salesforce
+ match protocol gmail
+ match protocol google-docs
+ match protocol slack
+ match protocol share-point
+!
+policy-map OUT-CHILD
+ class NETWORK-CONTROL
+  priority percent 10
+ class VOICE
+  priority 50000
+ class VIDEO
+  priority 70000
+ class HTTPS-critical
+  bandwidth percent 20 
+ class SCAVENGER
+  police rate percent 5
+ class class-default
+  fair-queue
+  random-detect dscp-based
+  random-detect ecn
+policy-map FATHER
+ class class-default
+  shape average 800000000   
+   service-policy OUT-CHILD
+policy-map INGRESS-WAN
+ class SCAVENGER
+  police rate percent 5
+   conform-action transmit 
+   exceed-action drop 
+ class class-default
+  police rate percent 95
+   conform-action transmit 
+   exceed-action drop 
+policy-map marking
+ class NETWORK-CONTROL
+  set dscp cs6
+ class VOICE
+  set dscp ef
+ class VIDEO
+  set dscp af41
+ class HTTPS-critical
+  set dscp af31
+ class SCAVENGER
+  set dscp cs1
+!
+! 
+!
+!
+!
+!
+!
+!
+!
+!
+crypto ipsec transform-set IKEV2_TRANSFORM_SET esp-aes 256 esp-sha256-hmac 
+ mode tunnel
+!
+crypto ipsec profile IKEV2_IPSEC_PROFILE
+ set transform-set IKEV2_TRANSFORM_SET 
+ set ikev2-profile IKEV2_PROFILE
+!
+!
+!
+!
+!
+!
+! 
+! 
+!
+!
+interface Loopback1
+ description Loopback for Tunnel Source - Underlay VRF, made by ansible :)
+ ip vrf forwarding underlay
+ ip address 8.8.8.8 255.255.255.255
+!
+interface Loopback2
+ description BGP Overlay Loopback Update-Source, made by ansible :)
+ ip vrf forwarding site_2
+ ip address 80.80.80.80 255.255.255.255
+!
+interface Tunnel1
+ description multipoint GRE DMVPN , made by ansible
+ ip vrf forwarding site_2
+ ip address 10.0.0.8 255.255.255.0
+ no ip redirects
+ ip mtu 1400
+ ip nhrp authentication hjdi21od
+ ip nhrp map 10.0.0.4 4.4.4.4
+ ip nhrp map multicast 4.4.4.4
+ ip nhrp network-id 1
+ ip nhrp nhs 10.0.0.4
+ ip tcp adjust-mss 1360
+ ip ospf network point-to-multipoint
+ qos pre-classify
+ tunnel source Loopback1
+ tunnel mode gre multipoint
+ tunnel vrf underlay
+ tunnel protection ipsec profile IKEV2_IPSEC_PROFILE
+!
+interface GigabitEthernet1
+ description DownLink to Collapsed Core D1.EITAN.COM, made by ansible :)
+ ip vrf forwarding site_2
+ ip address 192.168.1.10 255.255.255.252
+ ip nat inside
+ ip ospf message-digest-key 1 md5 ld2m1olmd1p
+ ip ospf network point-to-point
+ negotiation auto
+ no mop enabled
+ no mop sysid
+ service-policy input marking
+!
+interface GigabitEthernet2
+ description DownLink to Collapsed Core D2.EITAN.COM, made by ansible :)
+ ip vrf forwarding site_2
+ ip address 192.168.1.6 255.255.255.252
+ ip nat inside
+ ip ospf message-digest-key 1 md5 ld2m1olmd1p
+ ip ospf network point-to-point
+ negotiation auto
+ no mop enabled
+ no mop sysid
+ service-policy input marking
+!
+interface GigabitEthernet3
+ description Wan link to ISP (underlay), made by ansible :)
+ ip vrf forwarding underlay
+ ip address 1.2.3.6 255.255.255.254
+ ip nat outside
+ ip access-group iACL in
+ negotiation auto
+ no mop enabled
+ no mop sysid
+ service-policy input INGRESS-WAN
+ service-policy output FATHER
+!
+interface GigabitEthernet4
+ no ip address
+ shutdown
+ negotiation auto
+ no mop enabled
+ no mop sysid
+!
+interface GigabitEthernet5
+ no ip address
+ shutdown
+ negotiation auto
+ no mop enabled
+ no mop sysid
+!
+interface GigabitEthernet6
+ no ip address
+ shutdown
+ negotiation auto
+ no mop enabled
+ no mop sysid
+!
+interface GigabitEthernet7
+ no ip address
+ shutdown
+ negotiation auto
+ no mop enabled
+ no mop sysid
+!
+router ospf 1 vrf site_2
+ router-id 8.8.8.8
+ auto-cost reference-bandwidth 1000
+ area 0 authentication message-digest
+ network 192.168.1.4 0.0.0.3 area 0
+ network 192.168.1.8 0.0.0.3 area 0
+ default-information originate always metric 40
+!
+router ospf 2 vrf site_2
+ auto-cost reference-bandwidth 1000
+ network 10.0.0.0 0.0.0.255 area 0
+ network 80.80.80.80 0.0.0.0 area 0
+!
+router bgp 64540
+ bgp router-id 8.8.8.8
+ bgp log-neighbor-changes
+ !
+ address-family ipv4 vrf site_2
+  redistribute ospf 1
+  neighbor 40.40.40.40 remote-as 65510
+  neighbor 40.40.40.40 ebgp-multihop 3
+  neighbor 40.40.40.40 update-source Loopback2
+  neighbor 40.40.40.40 activate
+  neighbor 40.40.40.40 route-map FILTER_INTERNET_FROM_HUB out
+ exit-address-family
+ !
+ address-family ipv4 vrf underlay
+  network 1.2.3.6 mask 255.255.255.254
+  network 8.8.8.8 mask 255.255.255.255
+  neighbor 1.2.3.7 remote-as 200
+  neighbor 1.2.3.7 local-as 100 no-prepend replace-as
+  neighbor 1.2.3.7 activate
+  neighbor 1.2.3.7 allowas-in
+ exit-address-family
+!
+ip forward-protocol nd
+ip tcp synwait-time 5
+no ip http server
+ip http authentication local
+no ip http secure-server
+!
+ip as-path access-list 1 deny _200_
+ip as-path access-list 1 permit .*
+ip nat inside source list NAT-IN-LOCAL interface GigabitEthernet3 vrf site_2 overload
+ip ssh version 2
+!
+ip access-list standard NAT-IN-LOCAL
+ 10 permit 10.0.0.0 0.0.0.31
+ 20 permit 192.168.1.0 0.0.0.31
+ip access-list standard SSH_MGMT
+ 10 permit 200.0.0.0
+!
+ip access-list extended CONTROL_ACL
+ 10 remark === IKE / ISAKMP (UDP 500 + NAT-T 4500) ===
+ 10 permit udp any any eq isakmp
+ 20 permit udp any any eq non500-isakmp
+ 30 remark === IPsec ESP ===
+ 30 permit esp any any
+ 40 remark === OSPF (multicast 224.0.0.5/6) ===
+ 40 permit ospf any any
+ 50 remark === BGP (TCP 179) eBGP & iBGP ===
+ 50 permit tcp any any eq bgp
+ 60 permit tcp any eq bgp any
+ip access-list extended VOICE-ACL
+ 10 permit udp any range 16384 32767 any
+ 20 permit udp any any eq 5060
+ip access-list extended iACL
+ 10 remark 1 === ANTI-SPOOFING & BOGONS 
+ 10 deny   ip host 0.0.0.0 any log
+ 20 deny   ip 127.0.0.0 0.255.255.255 any log
+ 30 deny   ip 10.0.0.0 0.255.255.255 any log
+ 40 deny   ip 172.16.0.0 0.15.255.255 any log
+ 50 deny   ip 192.168.0.0 0.0.255.255 any log
+ 60 deny   ip 169.254.0.0 0.0.255.255 any log
+ 70 deny   ip 240.0.0.0 15.255.255.255 any log
+ 80 remark 2 === BLOCK TELNET & LEGACY 
+ 80 deny   tcp any any eq telnet log
+ 90 remark 3 === IPSEC / IKE 
+ 90 permit udp any any eq isakmp
+ 100 permit udp any any eq non500-isakmp
+ 110 permit esp any any
+ 120 remark 4 === UNDERLAY BGP ISP 
+ 120 permit tcp host 1.2.3.7 host 1.2.3.6 eq bgp
+ 130 permit tcp host 1.2.3.7 eq bgp host 1.2.3.6
+ 135 remark === allow underlay provisioning ssh
+ 135 permit tcp host 200.0.0.0 host 1.2.3.6 eq 22
+ 140 remark 5 === Allow limited ICMP HTTPS 
+ 140 permit icmp any any echo-reply
+ 150 permit icmp any any time-exceeded
+ 160 permit icmp any any unreachable
+ 170 permit icmp any any packet-too-big
+ 180 permit tcp any any eq 443
+ 190 remark 6 ===  DENY ALL THE REST + LOG 
+ 190 deny   ip any any log
+!
+!
+ip prefix-list accept_only_default_R3 seq 5 permit 0.0.0.0/0
+!
+!
+route-map FILTER_INTERNET_FROM_HUB permit 10 
+ match as-path 1
+!
+route-map IMPORTING_DEFAULT permit 10 
+ match ip address prefix-list accept_only_default_R3
+!
+route-map IMPORTING_DEFAULT deny 20 
+!
+!
+tacacs server Tacacs+
+ timeout 3
+!
+!
+!
+!
+control-plane
+!
+!
+!
+!
+!
+banner motd ^C
+"#########################################################################################
+#                                                                                       #
+#                        b UNAUTHORIZED ACCESS PROHIBITED  b                            #
+#                                                                                       #
+#   Connected to : R8.EITAN.COM                                                         #
+#   Property of  : ITLABS                                                               #
+#                                                                                       #
+#   Unauthorized access will result in disciplinary action and/or criminal prosecution. #
+#                                                                                       #
+#                                                                                       #
+#      |__ o\                                                                           #
+#      | W   \O                                                                         #
+#      |      |\_                                                                       #
+#      |      |                                                                         #
+#      |     /-\                                                                        #
+#      |   /     \                                                                      #
+#      |                                                                                #
+#      |                                                                                #
+#                                                                                       #
+#   Admin contact   : Donquixote@Doflamingo.com                                         #
+#   Emergency       : +1-555-NOC-WONT-HELP                                              #
+#                                                                                       #
+#   Disconnect IMMEDIATELY if you are not an authorized user.                           #
+#                                                                                       #
+#########################################################################################
+
+"
+^C
+!
+line con 0
+ exec-timeout 0 0
+ privilege level 15
+ logging synchronous
+ stopbits 1
+line vty 0 4
+ access-class SSH_MGMT in vrfname underlay
+ transport input ssh
+line vty 5 530
+ access-class SSH_MGMT in vrfname underlay
+ transport input ssh
+!
+call-home
+ ! If contact email address in call-home is configured as sch-smart-licensing@cisco.com
+ ! the email address configured in Cisco Smart License Portal will be used as contact email address to send SCH notifications.
+ contact-email-addr sch-smart-licensing@cisco.com
+ profile "CiscoTAC-1"
+  active
+  destination transport-method http
+!
+!
+!
+!
+!
+end

@@ -1,0 +1,57 @@
+
+SSH password: stname-here:~/ansible$ ansible-playbook logging_R1.yml -u Eitan -k
+
+PLAY [Configure logging on Cisco router] ***************************************
+
+TASK [Enable logging on router] ************************************************
+[WARNING]: ansible-pylibssh not installed, falling back to paramiko
+[WARNING]: To ensure idempotency and correct diff the input configuration lines
+should be similar to how they appear if present in the running configuration on
+device
+changed: [R1.Eitan.itlab.com]
+
+TASK [Display the logging configuration] ***************************************
+ok: [R1.Eitan.itlab.com] => {
+    "logging_output": {
+        "banners": {},
+        "changed": true,
+        "commands": [
+            "logging host 192.168.68.223",
+            "logging trap informational",
+            "logging console informational",
+            "logging buffered 8192 informational"
+        ],
+        "failed": false,
+        "updates": [
+            "logging host 192.168.68.223",
+            "logging trap informational",
+            "logging console informational",
+            "logging buffered 8192 informational"
+        ],
+        "warnings": [
+            "To ensure idempotency and correct diff the input configuration lines should be similar to how they appear if present in the running configuration on device"
+        ]
+    }
+}
+
+TASK [Verify logging settings] *************************************************
+ok: [R1.Eitan.itlab.com]
+
+TASK [Show logging settings on router] *****************************************
+ok: [R1.Eitan.itlab.com] => {
+    "verify_output.stdout_lines": [
+        [
+            "logging buffered 8192 informational",
+            "logging console informational",
+            "no logging btrace",
+            "logging host 192.168.68.223",
+            " logging synchronous"
+        ]
+    ]
+}
+
+PLAY RECAP *********************************************************************
+R1.Eitan.itlab.com         : ok=4    changed=1    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
+
+cisco@inserthostname-here:~/ansible$
+

@@ -1,0 +1,7 @@
+#SPDX-License-Identifier: MIT-0
+---
+# handlers file for bgp
+- name: debug
+  debug:
+    msg: "CONFIG CHANGE: {{bgp.commands}}"
+  listen: show_bgp_commands

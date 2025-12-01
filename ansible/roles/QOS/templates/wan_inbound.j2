@@ -1,0 +1,20 @@
+{% if Outbound_QOS is defined %}
+policy-map INGRESS-WAN
+{% for class in Outbound_QOS.classes %}
+{% if class.name == 'SCAVENGER' %}
+    class {{ class.name }}
+      police rate percent {{ class.police.rate }} 
+        conform-action transmit 
+        exceed-action drop
+{% endif %}
+{% endfor %}
+    class class-default
+      police rate percent 95 
+        conform-action transmit 
+        exceed-action drop
+{% endif %}
+
+{% if qos_private.wan_interface is defined %}
+interface {{ qos_private.wan_interface }}
+  service-policy input INGRESS-WAN
+{% endif %}

@@ -1,0 +1,17 @@
+#SPDX-License-Identifier: MIT-0
+---
+# handlers file for ospf_role
+
+- name: debug commands
+  debug:
+    msg: "{{out.commands}}"
+  listen: ospf_restart
+
+- name: Clear OSPF process with confirm
+  ios_command:
+    commands:
+      - command: clear ip ospf process
+        prompt: '[confirm]'
+        answer: "\n"
+  timeout: 120
+  listen: ospf_restart

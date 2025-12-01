@@ -1,0 +1,34 @@
+l3_interfaces:
+  - name: vlan20
+    ipv4: 10.0.20.12/29
+    description: "SVI for vlan 10, made by ansible :)"
+  
+
+
+L2:
+  vlans: 
+    - id: 20
+      name: CORP2
+    - id: 999
+      name: Native
+  snooping: true
+  trunk_interfaces: 
+    - name: Ethernet0/0
+      allowed_vlans: 20
+      native_vlan: 999
+    - name: Ethernet0/1
+      allowed_vlans: 20
+      native_vlan: 999
+  access_interfaces:
+    - name: Ethernet0/3
+      vlan: 20
+  dhcp_pools: 
+    - name: CORP2
+      network: 10.0.20.8 255.255.255.248
+      default_router: 10.0.20.11
+      excluded_address:
+        low: 10.0.20.9
+        high: 10.0.20.12
+  
+  uplinks: [Ethernet0/1, Ethernet0/0]
+ 

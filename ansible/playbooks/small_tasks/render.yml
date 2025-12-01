@@ -1,0 +1,8 @@
+---
+- name: Generate template
+  hosts: R2.EITAN.COM
+  tasks:
+    - name: Template
+      template:
+        src: '/home/eitan/Documents/ccnp-project/ansible/roles/QOS/templates/wan_inbound.j2'
+        dest: /tmp/template

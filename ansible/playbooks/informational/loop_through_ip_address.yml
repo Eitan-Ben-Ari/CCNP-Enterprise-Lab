@@ -1,0 +1,23 @@
+---
+
+- name: "Loop test"
+  hosts: site1_wan_routers, site2_wan_routers
+  gather_facts: False
+  connection: network_cli
+
+  tasks:
+    - name: gather_facts
+      ios_facts:
+        gather_subset: interfaces
+      register: ip_list
+
+    - name: loop Through IP info
+      debug:
+        msg:  "{{ ip_list.ansible_facts.ansible_net_hostname}} has an IP Address {{ item}} configured"
+      loop: "{{ip_list.ansible_facts.ansible_net_all_ipv4_addresses }}"
+        
+              
+
+
+       
+

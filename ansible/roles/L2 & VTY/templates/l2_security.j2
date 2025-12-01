@@ -1,0 +1,78 @@
+{% if L2 is defined and L2.dhcp_pools is defined %}
+
+
+
+{% for pool in L2.dhcp_pools %}
+
+{% if pool.excluded_address is defined %}
+{% if pool.excluded_address.high is defined %}
+ip dhcp excluded-address {{pool.excluded_address.low}} {{pool.excluded_address.high}}
+{% else %}
+ip dhcp excluded-address {{pool.excluded_address.low}} 
+{% endif %}
+{% endif %} 
+
+ip dhcp pool {{ pool.name }}
+  network {{ pool.network }}
+  default-router {{ pool.default_router }}
+
+{% endfor %}
+
+
+
+{% if L2.vlans is defined and L2.snooping is defined and L2.snooping %}
+ip dhcp snooping
+
+{% for vlan in L2.vlans %}
+{% if vlan.name != "Native" %}
+ip dhcp snooping vlan {{ vlan.id }}
+ip arp inspection vlan {{ vlan.id }}
+{% endif %}
+{% endfor %}
+
+{% endif %}
+
+
+{% if L2.uplinks is defined %}
+{% for uplink in L2.uplinks %}
+interface {{ uplink }}
+
+  ip dhcp snooping trust
+  ip arp inspection trust
+
+{% endfor %}
+{% endif %}
+
+
+
+{% if L2.access_interfaces is defined %}
+{% for interface in L2.access_interfaces %}
+interface {{ interface.name }}
+  switchport port-security
+  switchport port-security maximum 6
+  switchport port-security mac-address sticky
+  switchport port-security aging time 15
+  spanning-tree portfast
+  spanning-tree bpduguard enable
+
+{% endfor %}
+{% endif %}
+
+
+
+
+{% endif %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+

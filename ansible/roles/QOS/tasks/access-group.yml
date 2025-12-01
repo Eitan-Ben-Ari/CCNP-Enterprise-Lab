@@ -1,0 +1,108 @@
+
+---
+  - name: push access-list that will use to classify traffic for QOS
+    cisco.ios.ios_acls:
+      config:
+      - afi: ipv4
+        acls:
+          - name: CONTROL_ACL
+            acl_type: extended
+            aces:
+              # IKE / ISAKMP
+              - remarks:
+                  - "=== IKE / ISAKMP (UDP 500 + NAT-T 4500) ==="
+                grant: permit
+                protocol: udp
+                source:
+                  any: true
+                destination:
+                  any: true
+                  port_protocol:
+                    eq: 500
+
+              - grant: permit
+                protocol: udp
+                source:
+                  any: true
+                destination:
+                  any: true
+                  port_protocol:
+                    eq: 4500
+
+              # ESP & AH
+              - remarks:
+                  - "=== IPsec ESP ==="
+                grant: permit
+                protocol: esp
+                source:
+                  any: true
+                destination:
+                  any: true
+
+
+              # OSPF
+              - remarks:
+                  - "=== OSPF (multicast 224.0.0.5/6) ==="
+                grant: permit
+                protocol: ospf
+                source:
+                  any: true
+                destination:
+                  any: true
+
+              # BGP
+              - remarks:
+                  - "=== BGP (TCP 179) eBGP & iBGP ==="
+                grant: permit
+                protocol: tcp
+                source:
+                  any: true
+                destination:
+                  any: true
+                  port_protocol:
+                    eq: 179
+
+              - grant: permit
+                protocol: tcp
+                source:
+                  any: true
+                  port_protocol:
+                    eq: 179
+                destination:
+                  any: true
+
+          - name:  VOICE-ACL
+            acl_type: extended
+            aces:
+              - grant: permit
+                protocol: udp 
+                source:
+                  any: true
+                  port_protocol:
+                    range: 
+                      start: 16384
+                      end: 32767
+                destination:
+                  any: true
+              - grant: permit
+                protocol: udp
+                source:
+                  any: true
+                destination:
+                  any: true
+                  port_protocol:
+                    eq: 5060
+        
+          # - name: HTTPS-ACL
+          #   acl_type: extended
+          #   aces:
+          #     - grant: permit
+          #       protocol: tcp
+          #       source:
+          #         any: true
+          #       destination:
+          #         any: true
+          #         port_protocol:
+          #           eq: 443
+              
+        

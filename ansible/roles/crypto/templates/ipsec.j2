@@ -1,0 +1,45 @@
+{% if crypto is defined %}
+crypto ikev2 proposal {{ crypto.ikev2.policy[0].proposal.name }}
+ encryption {{ crypto.ikev2.policy[0].proposal.enc }}
+ integrity {{ crypto.ikev2.policy[0].proposal.hash }}
+ group {{ crypto.ikev2.policy[0].proposal.group }}
+!
+! IKEv2 Policy
+crypto ikev2 policy IKEV2_POLICY
+ proposal {{ crypto.ikev2.policy[0].proposal.name }}
+ match fvrf any
+
+ ! IKEv2 Keyring
+crypto ikev2 keyring {{ crypto.ikev2.keyring.name }}
+{% for peer in crypto_private.ikev2.keyring.peers %}
+ peer {{ peer.name }}
+  address {{ peer.address }}
+  pre-shared-key {{ peer.pre_shared_key }}
+ !
+{% endfor %}
+
+! IKEv2 Profile
+crypto ikev2 profile {{ crypto.ikev2.profile.name }}
+{% for identity in crypto_private.ikev2.profile.match_identities %}
+ match identity remote address {{ identity.address }}
+{% endfor %}
+ match fvrf any
+ identity local address {{ crypto_private.ikev2.profile.local_identity }}
+ authentication remote {{ crypto.ikev2.profile.authentication.remote }}
+ authentication local {{ crypto.ikev2.profile.authentication.local }}
+ keyring local {{ crypto.ikev2.profile.keyring }}
+ dpd {{ crypto.ikev2.profile.dpd.interval }} {{ crypto.ikev2.profile.dpd.retry }} {{ crypto.ikev2.profile.dpd.type }}
+!
+
+! IPSec Transform Set
+crypto ipsec transform-set {{ crypto.ipsec.transform_set.name }} {{ crypto.ipsec.transform_set.enc }} {{ crypto.ipsec.transform_set.hash }}
+ mode {{ crypto.ipsec.transform_set.mode }}
+!
+
+! IPSec Profile
+crypto ipsec profile {{ crypto.ipsec.profile.name }}
+ set transform-set {{ crypto.ipsec.profile.transform_set }}
+ set ikev2-profile {{ crypto.ipsec.profile.ikev2_profile }}
+!
+
+{% endif %}

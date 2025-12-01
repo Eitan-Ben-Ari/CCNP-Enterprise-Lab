@@ -1,0 +1,122 @@
+#create the zone file -start of authority, mail info, and name records
+sudo nano /etc/bind/db.Eitan.itlab.com
+
+cisco@inserthostname-here:/etc/bind$ cat db.Eitan.itlab.com
+$TTL    86400
+@       IN      SOA     ns1.Eitan.itlab.com. admin.Eitan.itlab.com. (
+                          2025011701 ; Serial
+                          3600       ; Refresh
+                          1800       ; Retry
+                          604800     ; Expire
+                          86400 )    ; Minimum TTL
+
+@       IN      NS      ns1.Eitan.itlab.com.
+ns1     IN      A       192.168.68.223
+R1      IN      A       192.168.68.222
+Switch  IN      A       192.168.68.224
+
+
+#added the zone configuration in BIND, Informs the BIND server about your zone and where to find its configuration file
+sudo nano /etc/bind/named.conf.local
+
+ 
+zone "Eitan.itlab.com" {
+    type master;
+    file "/etc/bind/db.Eitan.itlab.com";
+    allow-update { none; };
+};
+
+#This file defines global options for the BIND server, including DNSSEC validation and recursion settings.
+sudo nano /etc/bind/named.conf.options
+
+acl trustedclients {
+    localhost;                 // Allow localhost (127.0.0.1)
+    localnets;                 // Allow all local networks
+    192.168.68.0/22;          // Explicitly allow this subnet
+};
+
+options {
+    directory "/var/cache/bind";    // Default working directory for BIND
+    dnssec-validation auto;        // Enable automatic DNSSEC validation
+    forwarders {
+        1.1.1.1;                   // Cloudflare DNS
+        1.0.0.1;                   // Cloudflare secondary DNS
+    };
+
+    allow-recursion { trustedclients; };  // Allow recursion for trusted clients
+
+    listen-on port 53 { 192.168.68.223; 127.0.0.1; };  // Bind to specific IPv4 address
+    listen-on-v6 port 53 { ::1; };          // Bind to localhost for IPv6
+};
+------------------------------------------------------------------------------------------------------
+#explaination:
+
+#acl trustedclients:                  Defines which clients are allowed to perform recursive queries.
+#dnssec-validation auto:              Ensures that DNSSEC signatures are validated for all queries.
+#forwarders:                          Specifies external DNS servers (e.g., Cloudflare) for queries that cannot be resolved locally.
+#listen-on and listen-on-v6:          Configures which IP addresses BIND listens on for DNS queries.
+#directory "/var/cache/bind";:        Sets the working directory where runtime files are stored.
+--------------------------------------------------------------------------------------------------------
+
+sudo systemctl restart bind9
+sudo named-checkconf #Verify the global configuration
+
+dig R1.Eitan.itlab.com @127.0.0.1
+
+sudo dnssec-keygen -a RSASHA256 -b 1024 -n ZONE Eitan.itlab.com                             # generate ZSK (Zone Signing Key): Signs individual records (e.g., A, NS).
+sudo dnssec-keygen -a RSASHA256 -b 2048 -n ZONE -f KSK Eitan.itlab.com                      # generate KSK (Key Signing Key): Signs the DNSKEY record set, which includes both the ZSK and KSK
+
+sudo chown bind:bind /etc/bind/K*.key /etc/bind/K*.private
+sudo chmod 600 /etc/bind/K*.key /etc/bind/K*.private
+
+sudo sh -c 'cat K*.key >> /etc/bind/db.Eitan.itlab.com'                                     # Run the entire command in a shell 
+
+dnssec-signzone -A -o Eitan.itlab.com -t /etc/bind/db.Eitan.itlab.com                   #generates a signed zone file
+
+sudo nano /etc/bind/named.conf.local                                                     # change the files path to the signed zone
+
+zone "Eitan.itlab.com" {
+    type master;
+    file "/etc/bind/db.Eitan.itlab.com.signed";
+    dnssec-policy default;
+    inline-signing yes;
+    key-directory "/etc/bind";
+};
+
+sudo systemctl restart bind9 #apply changes and check global configuration
+sudo named-checkconf
+sudo named-checkzone Eitan.itlab.com /etc/bind/db.Eitan.itlab.com.signed                 #verify the integrity of the signed zone file
+--------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+cisco@inserthostname-here:/etc/bind$ dig @192.168.68.223 +dnssec R1.Eitan.itlab.com
+
+; <<>> DiG 9.18.30-0ubuntu0.24.04.1-Ubuntu <<>> @192.168.68.223 +dnssec R1.Eitan.itlab.com
+; (1 server found)
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 34253
+;; flags: qr aa rd ra; QUERY: 1, ANSWER: 2, AUTHORITY: 0, ADDITIONAL: 1
+
+;; OPT PSEUDOSECTION:
+; EDNS: version: 0, flags: do; udp: 1232
+; COOKIE: 74c4a224d66bc3d901000000678a3a9e28cdc52f87b171eb (good)
+;; QUESTION SECTION:
+;R1.Eitan.itlab.com.            IN      A
+
+;; ANSWER SECTION:
+R1.Eitan.itlab.com.     86400   IN      A       192.168.68.222
+R1.Eitan.itlab.com.     86400   IN      RRSIG   A 8 4 86400 20250216100750 20250117100750 29611 eitan.itlab.com. YzAXImvneLDka98odEMldXo86spmjT8Us/l8VgyGE8in13EFpgq1nnLB 2CgTy4fZDHczYh6V9w4MKt6wTrD9aPkjd7O+7dZr42txEDhvmGEMS2ZI Tm9C0LlNkvbI9l7VhGrQLTaJKEoNS+rqCMNV2a1H4I1q/H6+iaEHZRxT oYteeG74OzaJhX5+6mq3t4hQMDPhzNpAf+JpSbHSvJ1Brd8GnjaJXjkk qFiAc63edc+5ZlcVz8MXKZwmvaFXPYvCUIRsOheIp8lSTB5FV7wIWw6Y IO3mbQQuCT9IrPnWMmX1AHeX4fskD95wqi57o2fegWyTXvBZRD+3HUBT 8cPA2A==
+
+;; Query time: 0 msec
+;; SERVER: 192.168.68.223#53(192.168.68.223) (UDP)
+;; WHEN: Fri Jan 17 11:10:22 UTC 2025
+;; MSG SIZE  rcvd: 394
+
+
+To  receive responses from 192.168.68.223 defaultly and ensure all DNS queries go directly to the BIND server
+sudo systemctl disable --now systemd-resolved
+sudo rm /etc/resolv.conf
+echo "nameserver 192.168.68.223" | sudo tee /etc/resolv.conf
+
+
+

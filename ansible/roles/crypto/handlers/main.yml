@@ -1,0 +1,12 @@
+# ---
+# handlers file for crypto
+ - name: show_results_mgre
+   debug:
+    msg: "CONFIG CHANGE: {{mgre.commands}}"
+   listen: show_mgre_commands
+
+ - name: show_results_ipsec
+   debug:
+    msg: "CONFIG CHANGE: {{ipsec.commands}}"
+   listen: show_ipsec_commands
+ 

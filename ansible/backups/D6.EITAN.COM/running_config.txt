@@ -1,0 +1,314 @@
+Building configuration...
+
+Current configuration : 10346 bytes
+!
+! Last configuration change at 21:35:20 ISL Sun Nov 30 2025 by admin
+!
+version 17.16
+service timestamps debug datetime msec
+service timestamps log datetime msec
+service compress-config
+!
+hostname D6
+!
+boot-start-marker
+boot-end-marker
+!
+shell processing full
+!
+logging discriminator EXCESS severity drops 6 msg-body drops EXCESSCOLL 
+logging buffered 50000
+logging console discriminator EXCESS
+aaa new-model
+!
+!
+aaa authentication login default group tacacs+ group radius local
+aaa authorization config-commands
+aaa authorization exec default group tacacs+ group radius local 
+aaa authorization commands 5 default group tacacs+ 
+!
+!
+aaa session-id common
+!
+!
+!
+clock timezone ISL 2 0
+clock summer-time ISRAEL recurring last Fri Mar 2:00 last Sun Oct 2:00
+no ip icmp rate-limit unreachable
+!
+!
+!
+!
+!
+!
+!
+!
+ip dhcp pool CORP1
+ network 10.0.10.16 255.255.255.240
+ default-router 10.0.10.19 
+!
+!
+!
+ip audit notify log
+ip audit po max-events 100
+ip name-server 192.168.183.4
+no ip domain lookup
+ip domain name itlab
+ip cef
+login on-success log
+ipv6 unicast-routing
+ipv6 cef
+!
+!
+!
+!
+!
+!
+!
+!
+key chain HSRP
+ key 1
+  key-string myhsrpmd5password
+  accept-lifetime local 15:00:00 May 10 2025 15:00:00 May 10 2026
+  send-lifetime local 15:00:00 May 10 2025 15:00:00 May 10 2026
+  cryptographic-algorithm md5
+key chain HSRP_2
+ key 1
+  key-string myhsrpmd5password2
+  accept-lifetime local 15:00:00 May 10 2025 15:00:00 May 10 2026
+  send-lifetime local 15:00:00 May 10 2025 15:00:00 May 10 2026
+  cryptographic-algorithm md5
+!
+crypto pki trustpoint TP-self-signed-2048005
+ enrollment selfsigned
+ subject-name cn=IOS-Self-Signed-Certificate-2048005
+ revocation-check none
+ rsakeypair TP-self-signed-2048005
+ hash sha512
+!
+!
+crypto pki certificate chain TP-self-signed-2048005
+ certificate self-signed 01
+  3082032A 30820212 A0030201 02020101 300D0609 2A864886 F70D0101 0D050030 
+  2E312C30 2A060355 04030C23 494F532D 53656C66 2D536967 6E65642D 43657274 
+  69666963 6174652D 32303438 30303530 1E170D32 35303830 32313734 3533315A 
+  170D3335 30383032 31373435 33315A30 2E312C30 2A060355 04030C23 494F532D 
+  53656C66 2D536967 6E65642D 43657274 69666963 6174652D 32303438 30303530 
+  82012230 0D06092A 864886F7 0D010101 05000382 010F0030 82010A02 82010100 
+  D00FA4FC 4DAE9C10 B840A90A E31D6144 53693450 655AEBE7 0FF15E22 B7EE60A8 
+  9A68349A 6080B84B FC859CA3 E5E5691F 854B3CEC 208F2F7B E77B7F53 68AA05EB 
+  0C6975A5 84D86299 059B163B 8E3D42B8 E888A490 AFA42C22 5356AAAD 4C2DD983 
+  4BBEA702 6E355C99 FEC7BE0C A69337F6 07CF9677 6D0919B9 63C0B0B8 76306618 
+  69E236EE F53F9D02 4561FFCC FFAE7E69 E38DD9BF 5BA2F5F6 82FA4396 99E4A32E 
+  68597252 38EEF334 091B9F03 E0A18560 9EFF944D 6536AE01 96D88816 89836CEB 
+  C5F60E3A BCC02B84 3A537AFF 96EE87F5 D368F2D6 01D9C12D 5BB7065C E272ED80 
+  FB530D42 8262B85D E3F18CD3 4685A80F 4A670516 22CA34EF D60ABE58 4EC966AD 
+  02030100 01A35330 51301D06 03551D0E 04160414 9B5C750F 2D93ADAE B3733171 
+  7F49708B 43C850D2 301F0603 551D2304 18301680 149B5C75 0F2D93AD AEB37331 
+  717F4970 8B43C850 D2300F06 03551D13 0101FF04 05300301 01FF300D 06092A86 
+  4886F70D 01010D05 00038201 0100B12D 0823A4BB B2EFFCF2 4A54E810 C2558EAB 
+  AFF7841E 69D159CE C8B25785 31ADB26D C917ABFA 4B452815 B216427B D4CC9D51 
+  EFA28F8B 41B0D0AE 9E936D60 82C467C2 A1F52E33 7FEF6943 45AC2091 8B9E358C 
+  1DA33D37 E23D4DDF 8851C3BE F16D8AC0 CAB3E758 25AF7607 F1464601 48907892 
+  729DBDAA 4D4A5384 B66C28D1 82CED38B C872BA2D 5154520C C11F4DAC 13A57882 
+  78398C51 3FB29472 AA804CAB B90E62C4 A30A37AE B27A40B7 BDAD6790 B765B636 
+  099FA8F6 9F54709C 512C568A E103EE40 FC9086F6 13B5AADE 387315E3 555DE241 
+  0227E961 B61D84D1 5B01F525 0202E999 F382A80C AB5771DA E3670EF2 A8125B8B 
+  095727E4 022D7CCA 628F0FEB FFCA
+  	quit
+!
+!
+memory free low-watermark processor 53283
+!
+!
+spanning-tree mode rapid-pvst
+spanning-tree extend system-id
+spanning-tree vlan 10 priority 24576
+spanning-tree vlan 20 priority 28672
+!
+!
+username fallback privilege 5 secret 9 $14$BJKY$T3kA8pyogh02u.$VKlwE/lCvUlgqAaveqI9vx3dA09z2nBdGIyXu6hHblE
+username admin privilege 15 secret 9 $14$ueXl$W83kSeF5YIY9d.$2kAJzJtIOGZhC3DdOE09pCubkaV2gZbd0Q/yGnqpPjo
+!
+vlan internal allocation policy ascending
+no cdp run
+!
+!
+!
+!
+!
+interface Loopback0
+ description loopback for ssh remote connection , made by ansible
+ ip address 6.6.6.6 255.255.255.0
+!
+interface Port-channel1
+ switchport trunk encapsulation dot1q
+ switchport trunk native vlan 999
+ switchport trunk allowed vlan 10,20
+ switchport mode trunk
+ switchport nonegotiate
+!
+interface Ethernet0/0
+ description Uplink to Edge Router R2.EITAN.COM, made by ansible
+ no switchport
+ ip address 192.168.2.1 255.255.255.252
+ ip ospf message-digest-key 1 md5 kjado2jo1ndd1
+ ip ospf network point-to-point
+!
+interface Ethernet0/1
+ switchport trunk encapsulation dot1q
+ switchport trunk native vlan 999
+ switchport trunk allowed vlan 10,20
+ switchport mode trunk
+ switchport nonegotiate
+ channel-group 1 mode active
+!
+interface Ethernet0/2
+ switchport trunk encapsulation dot1q
+ switchport trunk native vlan 999
+ switchport trunk allowed vlan 10,20
+ switchport mode trunk
+ switchport nonegotiate
+ channel-group 1 mode active
+!
+interface Ethernet0/3
+ switchport trunk encapsulation dot1q
+ switchport trunk native vlan 999
+ switchport trunk allowed vlan 10
+ switchport mode trunk
+ switchport nonegotiate
+!
+interface Ethernet1/0
+ switchport trunk encapsulation dot1q
+ switchport trunk native vlan 999
+ switchport trunk allowed vlan 20
+ switchport mode trunk
+ switchport nonegotiate
+!
+interface Ethernet1/1
+ description Uplink to Edge Router R6.EITAN.COM , made by ansible
+ no switchport
+ ip address 192.168.2.13 255.255.255.252
+ ip ospf message-digest-key 1 md5 kjado2jo1ndd1
+ ip ospf network point-to-point
+!
+interface Ethernet1/2
+ shutdown
+!
+interface Ethernet1/3
+ shutdown
+!
+interface Ethernet2/0
+ shutdown
+!
+interface Ethernet2/1
+ shutdown
+!
+interface Vlan1
+ no ip address
+ shutdown
+!
+interface Vlan10
+ description SVI for vlan 10 , made by ansible
+ ip address 10.0.10.18 255.255.255.240
+ standby version 2
+ standby 10 ip 10.0.10.19
+ standby 10 priority 120
+ standby 10 preempt
+ standby 10 authentication md5 key-chain HSRP
+ ip ospf message-digest-key 1 md5 kjado2jo1ndd1
+ ip ospf network point-to-point
+!
+interface Vlan20
+ description SVI for vlan 20 , made by ansible
+ ip address 10.0.20.9 255.255.255.248
+ standby version 2
+ standby 20 ip 10.0.20.11
+ standby 20 priority 80
+ standby 20 preempt
+ standby 20 authentication md5 key-chain HSRP_2
+ ip ospf message-digest-key 1 md5 kjado2jo1ndd1
+ ip ospf network point-to-point
+ ip ospf cost 5
+!
+router ospf 1
+ router-id 6.6.6.6
+ auto-cost reference-bandwidth 1000
+ area 0 authentication message-digest
+ passive-interface Vlan10
+ passive-interface Vlan20
+ network 6.6.6.6 0.0.0.0 area 0
+ network 10.0.10.16 0.0.0.15 area 0
+ network 10.0.20.8 0.0.0.7 area 0
+ network 192.168.2.0 0.0.0.3 area 0
+ network 192.168.2.12 0.0.0.3 area 0
+ network 192.168.183.0 0.0.0.255 area 0
+ maximum-paths 2
+!
+ip forward-protocol nd
+ip forward-protocol udp
+!
+!
+ip tcp synwait-time 5
+ip http server
+ip http secure-server
+ip ssh bulk-mode 131072
+ip ssh rsa keypair-name SSHKEY
+ip ssh server algorithm encryption aes128-ctr aes192-ctr aes256-ctr
+ip ssh client algorithm encryption aes128-ctr aes192-ctr aes256-ctr
+!
+ip access-list standard SSH_MGMT
+ 10 permit 192.168.3.186
+!
+no logging btrace
+!
+!
+!
+!
+control-plane
+!
+!
+banner motd ^C
+"#########################################################################################
+#                                                                                       #
+#                        b UNAUTHORIZED ACCESS PROHIBITED  b                            #
+#                                                                                       #
+#   Connected to : D6.EITAN.COM                                                         #
+#   Property of  : ITLABS                                                               #
+#                                                                                       #
+#   Unauthorized access will result in disciplinary action and/or criminal prosecution. #
+#                                                                                       #
+#                                                                                       #
+#      |__ o\                                                                           #
+#      | W   \O                                                                         #
+#      |      |\_                                                                       #
+#      |      |                                                                         #
+#      |     /-\                                                                        #
+#      |   /     \                                                                      #
+#      |                                                                                #
+#      |                                                                                #
+#                                                                                       #
+#   Admin contact   : Donquixote@Doflamingo.com                                         #
+#   Emergency       : +1-555-NOC-WONT-HELP                                              #
+#                                                                                       #
+#   Disconnect IMMEDIATELY if you are not an authorized user.                           #
+#                                                                                       #
+#########################################################################################
+
+"
+^C
+!
+line con 0
+ exec-timeout 0 0
+ privilege level 15
+ logging synchronous
+line aux 0
+ exec-timeout 0 0
+ privilege level 15
+ logging synchronous
+line vty 0 4
+ access-class SSH_MGMT in
+ transport input ssh
+!
+!
+end

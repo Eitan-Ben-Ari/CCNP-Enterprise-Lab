@@ -1,0 +1,10 @@
+ansible_user: "admin"
+ansible_password: "1234"
+ansible_network_os: ios
+ansible_connection: network_cli
+
+
+ospf_shared_keys:
+  site_1: kjado2jo1ndd1
+  site_2: ld2m1olmd1p
+

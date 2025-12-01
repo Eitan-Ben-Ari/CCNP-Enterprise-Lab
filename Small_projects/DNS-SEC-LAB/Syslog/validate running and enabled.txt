@@ -1,0 +1,89 @@
+cisco@inserthostname-here:/var/log/remote_logs$ systemctl status syslog
+● rsyslog.service - System Logging Service
+     Loaded: loaded (/usr/lib/systemd/system/rsyslog.service; enabled; preset: >
+     Active: active (running) since Sun 2025-01-19 14:44:34 UTC; 6min ago
+TriggeredBy: ● syslog.socket
+       Docs: man:rsyslogd(8)
+             man:rsyslog.conf(5)
+             https://www.rsyslog.com/doc/
+    Process: 11949 ExecStartPre=/usr/lib/rsyslog/reload-apparmor-profile (code=>
+   Main PID: 11954 (rsyslogd)
+      Tasks: 10 (limit: 2320)
+     Memory: 1.7M (peak: 4.9M)
+        CPU: 105ms
+     CGroup: /system.slice/rsyslog.service
+             └─11954 /usr/sbin/rsyslogd -n -iNONE
+
+Jan 19 14:44:34 inserthostname-here systemd[1]: Starting rsyslog.service - Syst>
+Jan 19 14:44:34 inserthostname-here systemd[1]: Started rsyslog.service - Syste>
+Jan 19 14:44:34 inserthostname-here rsyslogd[11954]: imuxsock: Acquired UNIX so>
+Jan 19 14:44:34 inserthostname-here rsyslogd[11954]: rsyslogd's groupid changed>
+Jan 19 14:44:34 inserthostname-here rsyslogd[11954]: rsyslogd's userid changed >
+Jan 19 14:44:34 inserthostname-here rsyslogd[11954]: [origin software="rsyslogd>
+lines 1-21/21 (END)
+
+cisco@inserthostname-here:/var/log/remote_logs$ cat /etc/rsyslog.conf
+# /etc/rsyslog.conf configuration file for rsyslog
+#
+# For more information install rsyslog-doc and see
+# /usr/share/doc/rsyslog-doc/html/configuration/index.html
+#
+# Default logging rules can be found in /etc/rsyslog.d/50-default.conf
+
+
+#################
+#### MODULES ####
+#################
+
+module(load="imuxsock") # provides support for local system logging
+#module(load="immark")  # provides --MARK-- message capability
+
+# provides UDP syslog reception
+#module(load="imudp")
+#input(type="imudp" port="514")
+
+# provides TCP syslog reception
+#module(load="imtcp")
+#input(type="imtcp" port="514")
+
+# provides kernel logging support and enable non-kernel klog messages
+module(load="imklog" permitnonkernelfacility="on")
+
+###########################
+#### GLOBAL DIRECTIVES ####
+###########################
+
+# Filter duplicated messages
+$RepeatedMsgReduction on
+
+#
+# Set the default permissions for all log files.
+#
+$FileOwner syslog
+$FileGroup adm
+$FileCreateMode 0640
+$DirCreateMode 0755
+$Umask 0022
+$PrivDropToUser syslog
+$PrivDropToGroup syslog
+
+#
+# Where to place spool and state files
+#
+$WorkDirectory /var/spool/rsyslog
+
+#
+# Include all config files in /etc/rsyslog.d/
+#
+$IncludeConfig /etc/rsyslog.d/*.conf
+$ModLoad imudp
+$UDPServerRun 514
+$ModLoad imtcp
+$InputTCPServerRun 514
+# BEGIN ANSIBLE MANAGED BLOCK
+$template RemoteLogs,"/var/log/remote_logs/%FROMHOST-IP%/syslog.log"
+*.* ?RemoteLogs
+& stop
+# END ANSIBLE MANAGED BLOCK
+cisco@inserthostname-here:/var/log/remote_logs$
+

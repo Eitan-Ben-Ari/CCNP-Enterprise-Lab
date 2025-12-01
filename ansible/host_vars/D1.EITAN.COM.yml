@@ -1,0 +1,83 @@
+
+
+
+
+
+
+
+      
+l3_interfaces:
+
+  - name: Ethernet0/0
+    description:  Downlink to access_layer D3.EITAN.COM, made by ansible
+    ipv4: 192.168.1.30/31
+    no_switchport: true
+
+  - name: Port-Channel1
+    description: Port-Channel to D2.EITAN.COM, made by ansible
+    ipv4: 192.168.1.18/30
+    no_switchport: true
+
+  - name: Ethernet0/2
+    description: Downlink to access_layer D4.EITAN.COM, made by ansible
+    ipv4: 192.168.1.21/30
+    no_switchport: true
+
+  - name: Ethernet0/3
+    description: Uplink to Edge Router R1.EITAN.COM, made by ansible
+    ipv4: 192.168.1.2/30
+    no_switchport: true
+
+  - name: Ethernet1/0
+    description: Uplink to Edge Router R8.EITAN.COM, made by ansible
+    ipv4: 192.168.1.9/30
+    no_switchport: true
+
+  - name: loopback0
+    description:  Loopback for SSH Managemnet, made by ansible
+    ipv4: 1.1.1.1/32
+
+
+################################################ OSPF VARS
+
+
+ospf_ipv4: 
+  - process_id: 1
+    router_id: 1.1.1.1
+    areas:
+      - name: 0
+        authentication: true
+        networks:
+            
+          - ip: 192.168.1.0
+            wildcard: 0.0.0.3
+          - ip: 192.168.1.8
+            wildcard: 0.0.0.3
+          - ip: 192.168.1.16
+            wildcard: 0.0.0.3
+          - ip: 1.1.1.1
+            wildcard: 0.0.0.0
+          - ip: 192.168.1.20
+            wildcard: 0.0.0.3
+          - ip: 192.168.1.32
+            wildcard: 0.0.0.3
+
+        p2p_interfaces:
+          - name: Port-Channel1
+          - name: Ethernet0/0
+          - name: Ethernet1/0         
+          - name: Ethernet0/2
+          - name: Ethernet0/3
+      
+
+
+##############################################################################
+
+LAG:
+  name: Port-Channel1
+  l3: true
+  members: 
+    - int: Ethernet0/1
+      mode: active
+    - int: Ethernet1/1
+      mode: active

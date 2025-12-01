@@ -1,0 +1,160 @@
+
+l3_interfaces:
+  - name: gig 2
+    ipv4: 192.168.2.2/30
+    description: "DownLink to Collapsed Core D6.EITAN.COM, made by ansible :)"
+    vrf: site_1
+
+  - name: gig 3
+    ipv4: 192.168.2.10/30
+    description: "DownLink to Collapsed Core D7.EITAN.COM, made by ansible :)"
+    vrf: site_1
+
+  - name: gig 1
+    ipv4: 198.51.100.2/31
+    description: "Wan link to ISP (underlay), made by ansible :)"
+    vrf: underlay
+##### loopbacks
+ 
+  - name: loopback1
+    ipv4: 2.2.2.2/32
+    description: "Loopback for Tunnel Source - Underlay VRF, made by ansible :)"
+    vrf: underlay
+
+  - name: loopback2
+    ipv4: 20.20.20.20/32
+    description: "BGP Overlay Loopback Update-Source, made by ansible :)"
+    vrf: site_1
+
+
+
+############################################# OSPF VARS
+
+ospf_ipv4: 
+  - process_id: 1
+    vrf: site_1
+    router_id: 2.2.2.1
+    areas:
+      - name: 0
+        authentication: true
+        networks:
+          
+          - ip: 192.168.2.0
+            wildcard: 0.0.0.3
+            
+          - ip: 192.168.2.8
+            wildcard: 0.0.0.3
+        default_originate: 
+          metric: 30
+        p2p_interfaces:
+         
+          - name: GigabitEthernet2
+          - name: GigabitEthernet3
+           
+           
+
+  - process_id: 2
+    vrf: site_1
+    areas:
+      - name: 0
+        authentication: false
+        networks:
+          - ip: 10.0.0.0
+            wildcard: 0.0.0.255
+            
+          - ip: 20.20.20.20
+            wildcard: 0.0.0.0
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+crypto_private:
+  ikev2:
+    keyring:
+      peers:
+        - name: R4
+          address: 4.4.4.4  
+          pre_shared_key: mySecret24
+        - name: R1
+          address: 1.1.1.1 
+          pre_shared_key: mySecret12
+        - name: R8
+          address: 8.8.8.8
+          pre_shared_key: mySecret28
+    profile:
+      local_identity: "2.2.2.2"
+      match_identities:
+        - address: 1.1.1.1 255.255.255.255
+        - address: 8.8.8.8 255.255.255.255
+        - address: 4.4.4.4 255.255.255.255
+  
+  
+tunnel_vars:
+  - tunnel: "tunnel 1"
+    ip_address: 10.0.0.2/24
+    vrf: "site_1"
+    phase_3_action: "shortcut"
+    hub_tunnel_ip: "10.0.0.4"
+    hub_NBMA_ip: "4.4.4.4"
+
+
+bgp:
+  asn: "65530"
+  router_id: 2.2.2.2
+  vrf:
+    - name: site_1
+      redistribute: "ospf 1"
+      neighbors:
+        - ip: 40.40.40.40
+          remote_as: "65510"
+          ebgp_multihop: "3"
+          source: Loopback2
+          activate: true
+    # - name: underlay
+    #   networks:
+    #     - "2.2.2.2 mask 255.255.255.255"
+    #     - "198.51.100.2 mask 255.255.255.254"
+    #   neighbors:
+    #     - ip: 198.51.100.3
+    #       remote_as: "200"
+    #       local_as: "100 no-prepend replace-as"
+    #       allowas: true
+    #       activate: true
+
+
+
+
+         
+
+qos_private:
+  wan_interface: GigabitEthernet1
+  lan_interfaces:
+    - GigabitEthernet2
+    - GigabitEthernet3
+
+nat:
+  nat_range:
+  - "10.0.0.0/27"
+  - "192.168.2.0/28"
+  nat_vrf: site_1   
+
+
+SSH_MGMT:
+  Station: 200.0.0.0
+  lines: 0 530
+  vrf: underlay

@@ -1,0 +1,26 @@
+#########################################################################################
+#                                                                                       #
+#                        ███  UNAUTHORIZED ACCESS PROHIBITED  ███                             #
+#                                                                                       #
+#   Connected to : {{ inventory_hostname }}                                                         #
+#   Property of  : ITLABS                                                               #
+#                                                                                       #
+#   Unauthorized access will result in disciplinary action and/or criminal prosecution. #
+#                                                                                       #
+#                                                                                       #
+#      |__ o\                                                                           #
+#      | W   \O                                                                         #
+#      |      |\_                                                                       #
+#      |      |                                                                         #
+#      |     /-\                                                                        #
+#      |   /     \                                                                      #
+#      |                                                                                #
+#      |                                                                                #
+#                                                                                       #
+#   Admin contact   : Donquixote@Doflamingo.com                                         #
+#   Emergency       : +1-555-NOC-WONT-HELP                                              #
+#                                                                                       #
+#   Disconnect IMMEDIATELY if you are not an authorized user.                           #
+#                                                                                       #
+#########################################################################################
+

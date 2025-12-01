@@ -1,0 +1,238 @@
+Building configuration...
+
+Current configuration : 8010 bytes
+!
+! Last configuration change at 21:35:42 IST Sun Nov 30 2025 by admin
+!
+version 17.16
+service timestamps debug datetime msec
+service timestamps log datetime msec
+service compress-config
+!
+hostname D9
+!
+boot-start-marker
+boot-end-marker
+!
+shell processing full
+!
+logging discriminator EXCESS severity drops 6 msg-body drops EXCESSCOLL 
+logging buffered 50000
+logging console discriminator EXCESS
+aaa new-model
+!
+!
+aaa authentication login default group radius local
+aaa authorization exec default group radius local 
+!
+!
+aaa session-id common
+!
+!
+!
+clock timezone IST 2 0
+no ip routing
+no ip icmp rate-limit unreachable
+!
+!
+!
+!
+!
+!
+!
+ip dhcp excluded-address 10.0.20.9 10.0.20.12
+!
+ip dhcp pool CORP2
+ network 10.0.20.8 255.255.255.248
+ default-router 10.0.20.11 
+!
+!
+!
+ip dhcp snooping vlan 20
+ip dhcp snooping
+ip audit notify log
+ip audit po max-events 100
+ip name-server 192.168.183.4
+no ip domain lookup
+ip domain name itlab
+no ip cef
+ip arp inspection vlan 20
+login on-success log
+no ipv6 cef
+!
+!
+!
+!
+!
+!
+!
+!
+crypto pki trustpoint TP-self-signed-2048008
+ enrollment selfsigned
+ subject-name cn=IOS-Self-Signed-Certificate-2048008
+ revocation-check none
+ rsakeypair TP-self-signed-2048008
+ hash sha512
+!
+!
+crypto pki certificate chain TP-self-signed-2048008
+ certificate self-signed 01
+  3082032A 30820212 A0030201 02020101 300D0609 2A864886 F70D0101 0D050030 
+  2E312C30 2A060355 04030C23 494F532D 53656C66 2D536967 6E65642D 43657274 
+  69666963 6174652D 32303438 30303830 1E170D32 35303830 34313133 3735355A 
+  170D3335 30383034 31313337 35355A30 2E312C30 2A060355 04030C23 494F532D 
+  53656C66 2D536967 6E65642D 43657274 69666963 6174652D 32303438 30303830 
+  82012230 0D06092A 864886F7 0D010101 05000382 010F0030 82010A02 82010100 
+  B5D9A0A8 701D1D4A 45693158 8D237CE0 6A104474 A8B9A564 01EB6862 42E1A55B 
+  2D46DC71 14C95A6E D3687EC3 DB96916F 490B725A 285A1FED 7EED556A 8743514A 
+  7C4EF7CC B8266D02 7DF24E52 03A23B28 330846C4 C74AB303 448155E4 83AF7234 
+  A7AB8343 EB25FE46 41FDB054 7DDCD4EE DFD41064 1130E16E 1C10137E 93EAB93B 
+  4B4C9DFA 8034DE2C 0BCBDA87 3FE4AE05 F3E70BBD 6AE803A7 359173B0 10E77C0B 
+  B6657E1C 2D6D8BD0 12A03F23 B763E9F4 273582FB 4C151AEA 55B46239 2CD10C15 
+  117CE5FB D624A32E 5688794D ACE59087 736813FF 00F229C0 B3F82794 4C3A7806 
+  CC4F113F DB191113 2ABAD1EF 0BAFC7D6 D34F0C29 A895D9B6 23C67B81 DA662333 
+  02030100 01A35330 51301D06 03551D0E 04160414 E23AFE8F D74DB94D 51CB6814 
+  75C7B6B6 2B81B352 301F0603 551D2304 18301680 14E23AFE 8FD74DB9 4D51CB68 
+  1475C7B6 B62B81B3 52300F06 03551D13 0101FF04 05300301 01FF300D 06092A86 
+  4886F70D 01010D05 00038201 0100768C C5658257 ADC78644 5055C6CB CA7391CF 
+  265E30DD 9CE49FA3 D2979956 9ADCEEA0 4CD8731F B1AD6597 8C445125 8E9234A2 
+  2397C267 81FD6A37 9636B0F9 43476538 E44A9D53 D4C0C2BD A30E3741 46651F78 
+  3ED43234 4B99AF93 CE642EF2 D4558C84 DA3BC7B4 B159C3CE FCA34F01 F507EC8B 
+  6BE360B3 86C56757 D95C6E59 1C038B06 7A43D2C2 E3F3AD20 EE740E71 3B26F4DA 
+  BF1B5AE2 8EE9852C B14F1B01 ED41F495 2D45D8B6 549DAB52 353C092E 661BEBB3 
+  433B4711 8D1BE585 D9959A36 58EBE8EE 6DA3B419 B9BC097D 440D5DE6 F0340AB0 
+  185C64F2 840A5E00 CEEE8325 DB9F90E9 A9A4E6F1 834028EE 461F661D 480DDE16 
+  12C46DEC C8E8C099 E4090F29 E22C
+  	quit
+!
+!
+memory free low-watermark processor 53283
+!
+!
+spanning-tree mode rapid-pvst
+spanning-tree extend system-id
+!
+!
+username admin privilege 15 secret 9 $14$IIGy$txiUaPhd6D8eOk$/ExhjF9FeB0V.oMjl026OoEGuU.erJFLE1AssBblfzM
+!
+vlan internal allocation policy ascending
+!
+!
+!
+!
+!
+interface Ethernet0/0
+ switchport trunk encapsulation dot1q
+ switchport trunk native vlan 999
+ switchport trunk allowed vlan 20
+ switchport mode trunk
+ switchport nonegotiate
+ ip arp inspection trust
+ ip dhcp snooping trust
+!
+interface Ethernet0/1
+ switchport trunk encapsulation dot1q
+ switchport trunk native vlan 999
+ switchport trunk allowed vlan 20
+ switchport mode trunk
+ switchport nonegotiate
+ ip arp inspection trust
+ ip dhcp snooping trust
+!
+interface Ethernet0/2
+!
+interface Ethernet0/3
+ switchport access vlan 20
+ switchport mode access
+ switchport port-security maximum 6
+ switchport port-security mac-address sticky
+ switchport port-security aging time 15
+ switchport port-security
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+!
+interface Ethernet1/1
+ shutdown
+!
+interface Vlan1
+ no ip address
+ no ip route-cache
+ shutdown
+!
+interface Vlan20
+ description SVI for vlan 10, made by ansible :)
+ ip address 10.0.20.12 255.255.255.248
+ no ip route-cache
+!
+ip default-gateway 10.0.20.11
+ip forward-protocol nd
+ip forward-protocol udp
+!
+!
+ip tcp synwait-time 5
+ip http server
+ip http secure-server
+ip ssh bulk-mode 131072
+ip ssh rsa keypair-name SSHKEY
+ip ssh server algorithm encryption aes128-ctr aes192-ctr aes256-ctr
+ip ssh client algorithm encryption aes128-ctr aes192-ctr aes256-ctr
+!
+ip access-list standard SSH_MGMT
+ 10 permit 192.168.3.186
+!
+ip radius source-interface Vlan20 
+no logging btrace
+!
+tacacs server Tacacs+
+ timeout 3
+!
+!
+!
+!
+control-plane
+!
+!
+banner motd ^C
+"#########################################################################################
+#                                                                                       #
+#                        b UNAUTHORIZED ACCESS PROHIBITED  b                            #
+#                                                                                       #
+#   Connected to : D9.EITAN.COM                                                         #
+#   Property of  : ITLABS                                                               #
+#                                                                                       #
+#   Unauthorized access will result in disciplinary action and/or criminal prosecution. #
+#                                                                                       #
+#                                                                                       #
+#      |__ o\                                                                           #
+#      | W   \O                                                                         #
+#      |      |\_                                                                       #
+#      |      |                                                                         #
+#      |     /-\                                                                        #
+#      |   /     \                                                                      #
+#      |                                                                                #
+#      |                                                                                #
+#                                                                                       #
+#   Admin contact   : Donquixote@Doflamingo.com                                         #
+#   Emergency       : +1-555-NOC-WONT-HELP                                              #
+#                                                                                       #
+#   Disconnect IMMEDIATELY if you are not an authorized user.                           #
+#                                                                                       #
+#########################################################################################
+
+"
+^C
+!
+line con 0
+ exec-timeout 0 0
+ privilege level 15
+ logging synchronous
+line aux 0
+ exec-timeout 0 0
+ privilege level 15
+ logging synchronous
+line vty 0 4
+ access-class SSH_MGMT in
+ transport input ssh
+!
+!
+end

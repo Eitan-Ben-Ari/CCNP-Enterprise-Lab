@@ -1,0 +1,16 @@
+#SPDX-License-Identifier: MIT-0
+---
+# tasks file for NAT
+  - name: push inside_local_acl
+    include_tasks: source_list.yml
+    tags: [one]
+    register: inside_local
+    
+  
+  - name: push PAT.j2
+    cisco.ios.ios_config:
+      src: PAT.j2
+    tags: [two]
+    register: pat
+    notify: print_pat_commands
+  

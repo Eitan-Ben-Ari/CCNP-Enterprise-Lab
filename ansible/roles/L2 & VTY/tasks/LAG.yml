@@ -1,0 +1,27 @@
+
+
+
+- name: issue the no shutdown command on LAG interfaces
+  cisco.ios.ios_interfaces:
+    config:
+      - name: "{{LAG['name']}}"
+        enabled: true
+        mode: layer3
+      - name: "{{item['int']}}"
+        enabled: true
+        mode: layer3
+    state: merged
+  loop: "{{LAG['members']}}"
+  when: LAG['l3'] is defined
+
+
+- name: push lacp config
+  cisco.ios.ios_lag_interfaces:
+    config:
+      - name: "{{LAG['name']}}"
+        members:
+          - member: "{{item['int']}}"
+            mode: "{{item['mode']}}"
+    state: merged
+  loop: "{{LAG['members']}}"
+  when: LAG is defined
