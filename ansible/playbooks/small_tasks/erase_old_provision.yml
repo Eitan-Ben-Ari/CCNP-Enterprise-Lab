@@ -85,18 +85,13 @@
 
         - no ip nat inside
       parents: 
-        - interface {{item}}
-    loop: "{{qos_private.lan_interfaces}}" 
-    when: qos_private.lan_interfaces | length > 0
-  
-  - name: erase PAT interfaces commands before provisioning 8  :)))))
-    cisco.ios.ios_config:
-      lines:
+        - interface {{qos_private.lan_interfaces[0]}}
+        - interface {{qos_private.lan_interfaces[1]}}
+    when: 
+    - "'Edges' in group_names"
+    - "'hub' not in group_names"
+    tags: [three]
 
-        - no ip nat inside
-      parents: 
-        - interface {{qos_private.lan_interfaces}}
-    when: qos_private.lan_interfaces is string
   
   - name: erase PAT interfaces commands before provisioning 9  :)))))
     cisco.ios.ios_config:
@@ -105,7 +100,9 @@
         - no ip nat outside
       parents: 
         - interface {{qos_private.wan_interface}}
-    when: inventory_hostname != "R4.EITAN.COM"
+    when: 
+      - "'hub' not in group_names"
+      - "'Edges' in group_names"
   
   - name: erase PAT interfaces commands before provisioning 10  :)))))
     cisco.ios.ios_config:
@@ -113,7 +110,9 @@
 
         - ip nat inside source list NAT-IN-LOCAL interface {{qos_private.wan_interface}} vrf {{nat.nat_vrf}} overload
         - no ip nat inside source list NAT-IN-LOCAL interface {{qos_private.wan_interface}} vrf {{nat.nat_vrf}} overload
-  
+    when: 
+      - "'hub' not in group_names"
+      - "'Edges' in group_names"
   - name: erase VTY-line configuration before provisioning 11  :)))))
     cisco.ios.ios_config:
       lines:
@@ -124,8 +123,12 @@
   - name: erase all interfaces apart from WAN 12 :)))))
     cisco.ios.ios_config:
       lines:
-        - default interface {{item}}
-    loop: "{{qos_private.lan_interfaces}}"
+        - default interface {{qos_private.lan_interfaces[0]}}
+        - default interface {{qos_private.lan_interfaces[1]}}
+    when: 
+      - "'Edges' in group_names"
+      - "'hub' not in group_names"
+    tags: [four]
    
   - name: erase all interfaces apart from WAN 13 :)))))
     cisco.ios.ios_config:
