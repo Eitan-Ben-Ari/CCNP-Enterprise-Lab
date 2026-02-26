@@ -1,0 +1,78 @@
+data = {
+  "rpc-reply": {
+    "@xmlns": "urn:ietf:params:xml:ns:netconf:base:1.0",
+    "@message-id": "urn:uuid:d4b20568-55b8-44f3-bb0c-6b6d626684c1",
+    "@xmlns:nc": "urn:ietf:params:xml:ns:netconf:base:1.0",
+    "data": {
+      "native": {
+        "@xmlns": "http://cisco.com/ns/yang/Cisco-IOS-XE-native",
+        "ip": {
+          "access-list": {
+            "extended": [
+              {
+                "@xmlns": "http://cisco.com/ns/yang/Cisco-IOS-XE-acl",
+                "name": "100",
+                "access-list-seq-rule": [
+                  {
+                    "sequence": "10",
+                    "ace-rule": {
+                      "action": "permit",
+                      "protocol": "tcp",
+                      "host": "10.0.0.1",
+                      "dst-any": null,
+                      "tos": "min-delay"
+                    }
+                  },
+                  {
+                    "sequence": "20",
+                    "ace-rule": {
+                      "action": "permit",
+                      "protocol": "ip",
+                      "ipv4-address": "192.168.1.0",
+                      "mask": "0.0.0.255",
+                      "dest-ipv4-address": "192.168.2.0",
+                      "dest-mask": "0.0.0.255",
+                      "log": null
+                    }
+                  },
+                  {
+                    "sequence": "30",
+                    "ace-rule": {
+                      "action": "deny",
+                      "protocol": "ip",
+                      "host": "2.2.2.2",
+                      "dst-any": null
+                    }
+                  },
+                  {
+                    "sequence": "40",
+                    "ace-rule": {
+                      "action": "permit",
+                      "protocol": "ip",
+                      "any": null,
+                      "dst-any": null
+                    }
+                  }
+                ]
+              },
+              {
+                "@xmlns": "http://cisco.com/ns/yang/Cisco-IOS-XE-acl",
+                "name": "101",
+                "access-list-seq-rule": {
+                  "sequence": "10",
+                  "ace-rule": {
+                    "action": "permit",
+                    "protocol": "eigrp",
+                    "ipv4-address": "172.16.1.0",
+                    "mask": "0.0.254.255",
+                    "dst-any": null
+                  }
+                }
+              }
+            ]
+          }
+        }
+      }
+    }
+  }
+}

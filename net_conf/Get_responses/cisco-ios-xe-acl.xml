@@ -1,0 +1,67 @@
+<?xml version="1.0" ?>
+<rpc-reply xmlns="urn:ietf:params:xml:ns:netconf:base:1.0" xmlns:nc="urn:ietf:params:xml:ns:netconf:base:1.0" message-id="urn:uuid:d4b20568-55b8-44f3-bb0c-6b6d626684c1">
+	<data>
+		<native xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-native">
+			<ip>
+				<access-list>
+					<extended xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-acl">
+						<name>100</name>
+						<access-list-seq-rule>
+							<sequence>10</sequence>
+							<ace-rule>
+								<action>permit</action>
+								<protocol>tcp</protocol>
+								<host>10.0.0.1</host>
+								<dst-any/>
+								<tos>min-delay</tos>
+							</ace-rule>
+						</access-list-seq-rule>
+						<access-list-seq-rule>
+							<sequence>20</sequence>
+							<ace-rule>
+								<action>permit</action>
+								<protocol>ip</protocol>
+								<ipv4-address>192.168.1.0</ipv4-address>
+								<mask>0.0.0.255</mask>
+								<dest-ipv4-address>192.168.2.0</dest-ipv4-address>
+								<dest-mask>0.0.0.255</dest-mask>
+								<log/>
+							</ace-rule>
+						</access-list-seq-rule>
+						<access-list-seq-rule>
+							<sequence>30</sequence>
+							<ace-rule>
+								<action>deny</action>
+								<protocol>ip</protocol>
+								<host>2.2.2.2</host>
+								<dst-any/>
+							</ace-rule>
+						</access-list-seq-rule>
+						<access-list-seq-rule>
+							<sequence>40</sequence>
+							<ace-rule>
+								<action>permit</action>
+								<protocol>ip</protocol>
+								<any/>
+								<dst-any/>
+							</ace-rule>
+						</access-list-seq-rule>
+					</extended>
+					<extended xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-acl">
+						<name>101</name>
+						<access-list-seq-rule>
+							<sequence>10</sequence>
+							<ace-rule>
+								<action>permit</action>
+								<protocol>eigrp</protocol>
+								<ipv4-address>172.16.1.0</ipv4-address>
+								<mask>0.0.254.255</mask>
+								<dst-any/>
+							</ace-rule>
+						</access-list-seq-rule>
+					</extended>
+				</access-list>
+			</ip>
+		</native>
+	</data>
+</rpc-reply>

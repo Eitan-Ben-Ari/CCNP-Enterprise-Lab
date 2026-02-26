@@ -1,0 +1,1 @@
+router eigrp 1router-id 1.1.1.1network 0.0.0.0
